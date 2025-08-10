@@ -1,0 +1,37 @@
+body {
+  background-image: url('images/background.gif');
+  background-repeat: repeat;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #FF0000;
+}
+
+h1 {
+  font-size: 24px;
+  color: #000080;
+}
+
+h2 {
+  font-size: 18px;
+  color: #800000;
+}
+
+/* 复古滚动条样式 - 仅IE支持 */
+scrollbar {
+  scrollbar-face-color: #C0C0C0;
+  scrollbar-shadow-color: #808080;
+  scrollbar-highlight-color: #FFFFFF;
+  scrollbar-3dlight-color: #808080;
+  scrollbar-darkshadow-color: #000000;
+  scrollbar-track-color: #E0E0E0;
+  scrollbar-arrow-color: #000000;
+}
