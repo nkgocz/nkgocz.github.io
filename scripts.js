@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (audio.paused) {
       audio.play()
         .then(() => toggleBtn.textContent = '❚❚')
-        .catch(e => console.error('播放失败:', e));
+        .catch(e => console.error('play failed:', e));
     } else {
       audio.pause();
       toggleBtn.textContent = '▶';
