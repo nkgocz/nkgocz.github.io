@@ -7,6 +7,26 @@
 </head>
 <body bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
 
+ <body>
+  <!-- 添加CRT效果层 -->
+  <div class="crt-effect"></div>
+  
+  <!-- CRT显示器外壳 -->
+  <div class="crt-monitor">
+    <!-- 你原有的网站内容放在这里 -->
+    <table width="100%" border="0" cellspacing="20" cellpadding="0">
+      <!-- 原有内容 -->
+    </table>
+    
+    <!-- 添加显示器控制按钮 -->
+    <div class="monitor-controls">
+      <div class="power-button"></div>
+      <div class="brightness-knob"></div>
+      <div class="contrast-knob"></div>
+    </div>
+  </div>
+ </body> 
+
 <!-- 顶部欢迎横幅 -->
 <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000080">
   <tr>
@@ -48,11 +68,56 @@
         <a href="http://www.angelfire.com/" target="_blank">Angelfire</a><br>
       </font>
     </td>
-    <audio autoplay loop>
-  <source src="music/Bass Meant Jazz.mid" type="audio/midi">
-  <source src="music/Bass Meant Jazz.mp3" type="audio/mpeg">
-Whoops! Music playback failed (°Д°)
-    </audio>
+    
+    <div class="retro-music-player">
+  <audio id="bgMusic" loop>
+    <source src="music/Bass Meant Jazz.mid" type="audio/midi">
+    <source src="music/Bass Meant Jazz.mp3" type="audio/mpeg">    
+  </audio>
+  <button onclick="playMusic()">▶ PLAY</button>
+  <button onclick="pauseMusic()">❚❚ PAUSE</button>
+  <span>Volume:</span>
+  <input type="range" min="0" max="1" step="0.1" value="0.3" onchange="setVolume(this.value)">
+</div>
+
+<script>
+function playMusic() {
+  var bgMusic = document.getElementById('bgMusic');
+  bgMusic.volume = 0.3; // 默认30%
+  bgMusic.play();
+}
+
+function pauseMusic() {
+  document.getElementById('bgMusic').pause();
+}
+
+function setVolume(vol) {
+  document.getElementById('bgMusic').volume = vol;
+}
+</script>
+
+<style>
+.retro-music-player {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: #000080;
+  padding: 5px;
+  border: 2px outset #C0C0C0;
+  font-family: "Arial", sans-serif;
+  font-size: 12px;
+  color: white;
+  z-index: 1001;
+}
+
+.retro-music-player button {
+  background: #C0C0C0;
+  border: 2px outset #FFFFFF;
+  color: black;
+  margin: 0 2px;
+  cursor: pointer;
+}
+</style>
     
 document.getElementById('bgMusic').volume = 0.3; // 设置为30%音量
     <!-- 中间内容 -->
