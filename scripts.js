@@ -6,71 +6,104 @@ document.addEventListener('DOMContentLoaded', function() {
   alert("welcome to Noah's Diary:D");
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-  // 创建音频对象
-  const bgMusic = new Audio('music/background.mp3');
-  
-  // 设置音量30%
-  bgMusic.volume = 0.25;
-  
-  // 设置循环播放
-  bgMusic.loop = true;
-  
-  // 尝试自动播放（受浏览器策略限制）
-  const playPromise = bgMusic.play();
-  
-  // 处理自动播放被阻止的情况
-  if (playPromise !== undefined) {
-    playPromise.catch(error => {
-      // 显示播放按钮让用户手动启动
-      showMusicButton();
-    });
-  }
-  
-  // 显示音乐控制按钮的函数
-  function showMusicButton() {
-    const musicControl = document.createElement('div');
-    musicControl.id = 'music-control';
-    musicControl.innerHTML = `
-      <button id="play-music">▶ play</button>
+// 音乐播放器功能
+let audioPlayer;
+let isMusicPlaying = false;
+let isPlayerVisible = false;
 
-    document.body.appendChild(musicControl);
-    
-    // 添加按钮事件监听
-    document.getElementById('play-music').addEventListener('click', function() {
-      bgMusic.play();
-      this.style.display = 'none';
-    });
-    
-    // 音量控制
-    document.getElementById('volume-control').addEventListener('input', function(e) {
-      bgMusic.volume = e.target.value;
-    });
+// 初始化音乐播放器
+function initMusicPlayer() {
+  audioPlayer = new Audio('Bass Meant Jazz.mid');
+  audioPlayer.volume = 0.3; // 默认音量30%
+  audioPlayer.loop = true;
+  
+  // 创建首次交互后自动播放的逻辑
+  const playOnInteraction = () => {
+    if (!isMusicPlaying) {
+      audioPlayer.play().then(() => {
+        isMusicPlaying = true;
+        document.querySelector('.retro-btn').textContent = '⏸ Pause';
+      }).catch(e => console.log(e));
+    }
+    document.removeEventListener('click', playOnInteraction);
+    document.removeEventListener('keydown', playOnInteraction);
+  };
+  
+  document.addEventListener('click', playOnInteraction);
+  document.addEventListener('keydown', playOnInteraction);
+  
+  // 使窗口可拖动
+  makeDraggable(document.getElementById('musicPlayer'), 
+                document.querySelector('.retro-title-bar'));
+}
+
+// 切换播放/暂停
+function togglePlay() {
+  if (isMusicPlaying) {
+    audioPlayer.pause();
+    document.querySelector('.retro-btn').textContent = '▶️ Play';
+  } else {
+    audioPlayer.play();
+    document.querySelector('.retro-btn').textContent = '⏸ Pause';
+  }
+  isMusicPlaying = !isMusicPlaying;
+}
+
+// 停止音乐
+function stopMusic() {
+  audioPlayer.pause();
+  audioPlayer.currentTime = 0;
+  document.querySelector('.retro-btn').textContent = '▶️ Play';
+  isMusicPlaying = false;
+}
+
+// 设置音量
+function setVolume(vol) {
+  audioPlayer.volume = vol;
+}
+
+// 切换播放器显示/隐藏
+function toggleMusicPlayer() {
+  const player = document.getElementById('musicPlayer');
+  isPlayerVisible = !isPlayerVisible;
+  player.style.display = isPlayerVisible ? 'block' : 'none';
+}
+
+// 使元素可拖动
+function makeDraggable(element, handle) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  
+  handle.onmousedown = dragMouseDown;
+  
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
   }
   
-  // 复古样式
-  const style = document.createElement('style');
-  style.textContent = `
-    #music-control {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: #0000FF;
-      color: black;
-      padding: 5px 10px;
-      font-family: "Comic Sans MS", cursive;
-      border: 2px outset #FFFFFF;
-      z-index: 1000;
-    }
-    #music-control button {
-      background: #C0C0C0;
-      border: 2px outset #FFFFFF;
-      color: black;
-      cursor: pointer;
-    }
-    #music-control input {
-      vertical-align: middle;
-    }
-  `;
-  document.head.appendChild(style);
-});
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    element.style.top = (element.offsetTop - pos2) + "px";
+    element.style.left = (element.offsetLeft - pos1) + "px";
+  }
+  
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+// 页面加载完成后初始化
+window.onload = function() {
+  initMusicPlayer();
+  // 默认显示播放器
+  toggleMusicPlayer();
+};
