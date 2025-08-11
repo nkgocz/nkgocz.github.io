@@ -6,24 +6,25 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-  // 创建音频对象
+  // 音频设置
   const audio = new Audio('Bass Meant Jazz.mp3');
-  audio.volume = 0.3; // 初始音量30%
+  audio.volume = 0.3;
   audio.loop = true;
   
-  // 获取DOM元素
-  const player = document.getElementById('retroMusicPlayer');
-  const playPauseBtn = document.getElementById('playPauseBtn');
-  const volumeControl = document.getElementById('volumeControl');
+  // 获取元素
+  const musicBox = document.getElementById('retroMusicBox');
+  const toggleBtn = document.getElementById('musicToggle');
+  const volumeControl = document.getElementById('musicVolume');
   
-  // 播放/暂停功能
-  playPauseBtn.addEventListener('click', function() {
+  // 播放/暂停控制
+  toggleBtn.addEventListener('click', function() {
     if (audio.paused) {
-      audio.play();
-      playPauseBtn.textContent = '❚❚';
+      audio.play()
+        .then(() => toggleBtn.textContent = '❚❚')
+        .catch(e => console.error('播放失败:', e));
     } else {
       audio.pause();
-      playPauseBtn.textContent = '▶';
+      toggleBtn.textContent = '▶';
     }
   });
   
@@ -32,65 +33,74 @@ document.addEventListener('DOMContentLoaded', function() {
     audio.volume = this.value;
   });
   
-  // 拖动功能
-  let isDragging = false;
-  let offsetX, offsetY;
+  // 高性能拖动实现
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   
   // 桌面端拖动
-  player.addEventListener('mousedown', startDrag);
+  musicBox.onmousedown = dragMouseDown;
   
   // 移动端拖动
-  player.addEventListener('touchstart', function(e) {
+  musicBox.ontouchstart = touchStart;
+  
+  function dragMouseDown(e) {
+    e = e || window.event;
     e.preventDefault();
-    startDrag({
-      clientX: e.touches[0].clientX,
-      clientY: e.touches[0].clientY
-    });
-  });
-  
-  function startDrag(e) {
-    isDragging = true;
-    offsetX = e.clientX - player.getBoundingClientRect().left;
-    offsetY = e.clientY - player.getBoundingClientRect().top;
-    
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', touchDrag);
-    document.addEventListener('mouseup', stopDrag);
-    document.addEventListener('touchend', stopDrag);
+    // 获取鼠标初始位置
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
   }
   
-  function drag(e) {
-    if (isDragging) {
-      player.style.left = (e.clientX - offsetX) + 'px';
-      player.style.top = (e.clientY - offsetY) + 'px';
-    }
+  function touchStart(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    pos3 = touch.clientX;
+    pos4 = touch.clientY;
+    document.ontouchend = closeDragElement;
+    document.ontouchmove = touchMove;
   }
   
-  function touchDrag(e) {
-    if (isDragging) {
-      player.style.left = (e.touches[0].clientX - offsetX) + 'px';
-      player.style.top = (e.touches[0].clientY - offsetY) + 'px';
-    }
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // 计算新位置
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // 设置元素新位置
+    musicBox.style.top = (musicBox.offsetTop - pos2) + "px";
+    musicBox.style.left = (musicBox.offsetLeft - pos1) + "px";
   }
   
-  function stopDrag() {
-    isDragging = false;
-    document.removeEventListener('mousemove', drag);
-    document.removeEventListener('touchmove', touchDrag);
-    document.removeEventListener('mouseup', stopDrag);
-    document.removeEventListener('touchend', stopDrag);
+  function touchMove(e) {
+    const touch = e.touches[0];
+    pos1 = pos3 - touch.clientX;
+    pos2 = pos4 - touch.clientY;
+    pos3 = touch.clientX;
+    pos4 = touch.clientY;
+    musicBox.style.top = (musicBox.offsetTop - pos2) + "px";
+    musicBox.style.left = (musicBox.offsetLeft - pos1) + "px";
   }
   
-  // 点击页面任意位置后开始播放（解决浏览器自动播放限制）
-  function handleFirstInteraction() {
-    audio.play().then(() => {
-      playPauseBtn.textContent = '❚❚';
-    }).catch(e => console.log(e));
-    
-    document.removeEventListener('click', handleFirstInteraction);
-    document.removeEventListener('touchstart', handleFirstInteraction);
+  function closeDragElement() {
+    // 停止移动
+    document.onmouseup = null;
+    document.onmousemove = null;
+    document.ontouchend = null;
+    document.ontouchmove = null;
   }
   
-  document.addEventListener('click', handleFirstInteraction);
-  document.addEventListener('touchstart', handleFirstInteraction);
+  // 解决自动播放限制
+  function initAudio() {
+    document.removeEventListener('click', initAudio);
+    document.removeEventListener('touchstart', initAudio);
+    audio.play()
+      .then(() => toggleBtn.textContent = '❚❚')
+      .catch(e => console.log('plz interact first'));
+  }
+  
+  document.addEventListener('click', initAudio);
+  document.addEventListener('touchstart', initAudio);
 });
