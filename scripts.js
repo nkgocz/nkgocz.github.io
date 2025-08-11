@@ -6,14 +6,3 @@ document.addEventListener('DOMContentLoaded', function() {
   alert("welcome to Noah's Diary:D");
 });
 
-// 播放/暂停背景音乐
-const bgMusic = new Audio('Bass Meant Jazz.mp3');
-bgMusic.volume = 0.3; // 30%音量
-
-function toggleMusic() {
-  if(bgMusic.paused) {
-    bgMusic.play();
-  } else {
-    bgMusic.pause();
-  }
-}
