@@ -1,33 +1,3 @@
-// 确保DOM完全加载后执行
-document.addEventListener('DOMContentLoaded', function() {
-  // 调试：检查播放器元素是否存在
-  const player = document.getElementById('musicPlayer');
-  if (!player) {
-    console.error("错误：未找到 #musicPlayer 元素！");
-    return;
-  }
-
-  // 初始化播放器
-  const audioPlayer = new Audio('music/background.mp3');
-  audioPlayer.volume = 0.3;
-  audioPlayer.loop = true;
-
-  // 播放/暂停功能
-  document.querySelector('.retro-btn').addEventListener('click', function() {
-    if (audioPlayer.paused) {
-      audioPlayer.play();
-      this.textContent = '⏸ Pause';
-    } else {
-      audioPlayer.pause();
-      this.textContent = '▶️ Play';
-    }
-  });
-
-  // 显示播放器（确保CSS已加载）
-  player.style.display = 'block';
-});
-
-// scripts.js
 console.log("JavaScript Loaded!"); // 在浏览器控制台显示消息
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -35,104 +5,129 @@ document.addEventListener('DOMContentLoaded', function() {
   alert("welcome to Noah's Diary:D");
 });
 
-// 音乐播放器功能
-let audioPlayer;
-let isMusicPlaying = false;
-let isPlayerVisible = false;
-
-// 初始化音乐播放器
-function initMusicPlayer() {
-  audioPlayer = new Audio('Bass Meant Jazz.mid');
-  audioPlayer.volume = 0.3; // 默认音量30%
-  audioPlayer.loop = true;
-  
-  // 创建首次交互后自动播放的逻辑
-  const playOnInteraction = () => {
-    if (!isMusicPlaying) {
-      audioPlayer.play().then(() => {
-        isMusicPlaying = true;
-        document.querySelector('.retro-btn').textContent = '⏸ Pause';
-      }).catch(e => console.log(e));
+// 音乐播放器控制脚本
+document.addEventListener('DOMContentLoaded', function() {
+    // 创建播放器元素
+    const musicPlayer = document.createElement('div');
+    musicPlayer.id = 'retro-music-player';
+    musicPlayer.innerHTML = `
+        <div class="player-header">
+            <span class="player-title">🎵 BGM Player</span>
+            <span class="player-minimize">_</span>
+            <span class="player-close">×</span>
+        </div>
+        <div class="player-body">
+            <audio id="bgMusic" loop>
+                <source src="music/background.mp3" type="audio/mpeg">
+                <source src="music/background.mid" type="audio/midi">
+            </audio>
+            <div class="player-controls">
+                <button id="playPauseBtn">❚❚ Pause</button>
+                <span class="volume-control">
+                    <span>Vol:</span>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.3">
+                </span>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(musicPlayer);
+    
+    // 获取元素
+    const audio = document.getElementById('bgMusic');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const minimizeBtn = musicPlayer.querySelector('.player-minimize');
+    const closeBtn = musicPlayer.querySelector('.player-close');
+    
+    // 初始化播放器
+    let isMinimized = false;
+    let isDragging = false;
+    let offsetX, offsetY;
+    const header = musicPlayer.querySelector('.player-header');
+    
+    // 设置初始音量
+    audio.volume = volumeSlider.value;
+    
+    // 尝试自动播放（需要用户交互）
+    function tryAutoPlay() {
+        const promise = audio.play();
+        
+        if (promise !== undefined) {
+            promise.catch(error => {
+                // 自动播放被阻止，显示提示
+                musicPlayer.innerHTML += `
+                    <div class="play-message">
+                        Click anywhere to play music
+                    </div>
+                `;
+                
+                // 点击页面任何地方开始播放
+                document.addEventListener('click', function startPlay() {
+                    audio.play();
+                    document.querySelector('.play-message').remove();
+                    document.removeEventListener('click', startPlay);
+                }, { once: true });
+            });
+        }
     }
-    document.removeEventListener('click', playOnInteraction);
-    document.removeEventListener('keydown', playOnInteraction);
-  };
-  
-  document.addEventListener('click', playOnInteraction);
-  document.addEventListener('keydown', playOnInteraction);
-  
-  // 使窗口可拖动
-  makeDraggable(document.getElementById('musicPlayer'), 
-                document.querySelector('.retro-title-bar'));
-}
-
-// 切换播放/暂停
-function togglePlay() {
-  if (isMusicPlaying) {
-    audioPlayer.pause();
-    document.querySelector('.retro-btn').textContent = '▶️ Play';
-  } else {
-    audioPlayer.play();
-    document.querySelector('.retro-btn').textContent = '⏸ Pause';
-  }
-  isMusicPlaying = !isMusicPlaying;
-}
-
-// 停止音乐
-function stopMusic() {
-  audioPlayer.pause();
-  audioPlayer.currentTime = 0;
-  document.querySelector('.retro-btn').textContent = '▶️ Play';
-  isMusicPlaying = false;
-}
-
-// 设置音量
-function setVolume(vol) {
-  audioPlayer.volume = vol;
-}
-
-// 切换播放器显示/隐藏
-function toggleMusicPlayer() {
-  const player = document.getElementById('musicPlayer');
-  isPlayerVisible = !isPlayerVisible;
-  player.style.display = isPlayerVisible ? 'block' : 'none';
-}
-
-// 使元素可拖动
-function makeDraggable(element, handle) {
-  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  
-  handle.onmousedown = dragMouseDown;
-  
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    document.onmousemove = elementDrag;
-  }
-  
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    element.style.top = (element.offsetTop - pos2) + "px";
-    element.style.left = (element.offsetLeft - pos1) + "px";
-  }
-  
-  function closeDragElement() {
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
-
-// 页面加载完成后初始化
-window.onload = function() {
-  initMusicPlayer();
-  // 默认显示播放器
-  toggleMusicPlayer();
-};
+    
+    // 延迟尝试自动播放
+    setTimeout(tryAutoPlay, 1000);
+    
+    // 播放/暂停控制
+    playPauseBtn.addEventListener('click', function() {
+        if (audio.paused) {
+            audio.play();
+            playPauseBtn.textContent = '❚❚ Pause';
+        } else {
+            audio.pause();
+            playPauseBtn.textContent = '▶ Play';
+        }
+    });
+    
+    // 音量控制
+    volumeSlider.addEventListener('input', function() {
+        audio.volume = volumeSlider.value;
+    });
+    
+    // 最小化/恢复
+    minimizeBtn.addEventListener('click', function() {
+        if (isMinimized) {
+            musicPlayer.style.width = '200px';
+            musicPlayer.style.height = '80px';
+            musicPlayer.querySelector('.player-body').style.display = 'block';
+            isMinimized = false;
+        } else {
+            musicPlayer.style.width = '120px';
+            musicPlayer.style.height = '30px';
+            musicPlayer.querySelector('.player-body').style.display = 'none';
+            isMinimized = true;
+        }
+    });
+    
+    // 关闭按钮（实际是最小化）
+    closeBtn.addEventListener('click', function() {
+        minimizeBtn.click();
+    });
+    
+    // 拖动功能
+    header.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        offsetX = e.clientX - musicPlayer.getBoundingClientRect().left;
+        offsetY = e.clientY - musicPlayer.getBoundingClientRect().top;
+        musicPlayer.style.cursor = 'grabbing';
+    });
+    
+    document.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        
+        musicPlayer.style.left = (e.clientX - offsetX) + 'px';
+        musicPlayer.style.top = (e.clientY - offsetY) + 'px';
+    });
+    
+    document.addEventListener('mouseup', function() {
+        isDragging = false;
+        musicPlayer.style.cursor = 'default';
+    });
+});
