@@ -288,6 +288,25 @@
       });
     });
   </script>
+  <!-- 音乐播放器窗口 -->
+<div id="musicPlayer" class="retro-window">
+  <div class="retro-window-header">
+    <span class="retro-window-title">🎵 BGM Player</span>
+    <div class="retro-window-controls">
+      <button class="retro-btn" id="musicToggle">❚❚</button>
+      <button class="retro-btn" id="musicClose">✕</button>
+    </div>
+  </div>
+  <div class="retro-window-body">
+    <div class="volume-control">
+      <label for="musicVolume">volume</label>
+      <input type="range" id="musicVolume" min="0" max="1" step="0.1" value="0.3">
+    </div>
+    <div class="track-info">
+      <span id="nowPlaying">Noah's Theme</span>
+    </div>
+  </div>
+</div>
     
 <script src="scripts.js"></script>
 </body>
