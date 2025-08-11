@@ -1,0 +1,215 @@
+/* ======================== */
+/* Noah's Diary - 复古优化版 */
+/* ======================== */
+
+/* 基础重置与全局样式 */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif;
+  background-color: #000;
+  color: #000;
+  background-image: url('images/bg-pattern.gif');
+  background-repeat: repeat;
+}
+
+/* 主容器 - CRT显示器效果 */
+.crt-container {
+  width: 90%;
+  max-width: 800px;
+  min-height: 90vh;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #006;
+  border: 8px ridge #ccc;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+/* CRT屏幕效果 */
+.crt-screen {
+  background-color: #aaddff;
+  border: 4px inset #6699cc;
+  padding: 15px;
+  height: 100%;
+  position: relative;
+  overflow: auto;
+}
+
+/* 扫描线效果 (使用伪元素实现) */
+.crt-screen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 标题样式 */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.header h1 {
+  font-family: "Impact", "Arial Black", sans-serif;
+  color: #800080;
+  font-size: 2.5em;
+  text-shadow: 3px 3px 0 #000, -1px -1px 0 #000;
+  letter-spacing: 2px;
+  margin: 0;
+  padding: 10px;
+  background-color: #ffcc00;
+  border: 3px outset #cc9900;
+}
+
+/* 导航菜单 */
+.nav-menu {
+  background-color: #000080;
+  padding: 5px 0;
+  margin-bottom: 20px;
+  border-top: 2px solid #ccc;
+  border-bottom: 2px solid #ccc;
+}
+
+.nav-menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.nav-menu li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px 10px;
+  background-color: #0000aa;
+  border: 2px outset #ccc;
+}
+
+.nav-menu li a:hover {
+  background-color: #ff0000;
+  color: #ffff00;
+}
+
+/* 内容区域 */
+.content {
+  background-color: #fff;
+  padding: 15px;
+  border: 3px inset #ccc;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/* 日记条目 */
+.diary-entry {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #000;
+}
+
+.diary-date {
+  font-weight: bold;
+  color: #800000;
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+
+/* 链接样式 */
+a {
+  color: #0000ff;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #ff0000;
+  text-decoration: none;
+}
+
+/* 按钮样式 */
+.button {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #c0c0c0;
+  color: #000;
+  text-decoration: none;
+  border: 3px outset #fff;
+  font-family: "Arial", sans-serif;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #a0a0a0;
+}
+
+/* 页脚 */
+.footer {
+  text-align: center;
+  font-size: 0.8em;
+  color: #fff;
+  background-color: #000080;
+  padding: 5px;
+  border-top: 2px solid #ccc;
+}
+
+/* 访客计数器 */
+.counter {
+  font-family: "Courier New", monospace;
+  color: #0f0;
+  background-color: #000;
+  padding: 2px 5px;
+  border: 1px solid #0f0;
+}
+
+/* 闪烁效果 */
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* 复古滚动条 (仅部分浏览器支持) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000066;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00ffff;
+  border: 2px outset #ccc;
+}
+
+/* 响应式调整 */
+@media (max-width: 600px) {
+  .crt-container {
+    width: 95%;
+    padding: 10px;
+  }
+  
+  .nav-menu ul {
+    flex-direction: column;
+  }
+  
+  .nav-menu li {
+    margin-bottom: 5px;
+  }
+}
