@@ -230,88 +230,65 @@ input, textarea, [contenteditable] {
 .busy, .loading {
   cursor: url('images/cursors/busy.cur'), wait;
 }
-/* 音乐播放器窗口样式 */
-.retro-window {
+/* 复古音乐播放器样式 */
+.retro-music-player {
   position: fixed;
   bottom: 20px;
   right: 20px;
   width: 200px;
   background-color: #c0c0c0;
   border: 3px outset #ffffff;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
   font-family: "Comic Sans MS", cursive;
   z-index: 1000;
-  user-select: none;
+  cursor: move;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 
-.retro-window-header {
-  padding: 5px;
+.player-header {
   background: linear-gradient(to right, #000080, #1084d0);
   color: white;
+  padding: 5px 10px;
   font-weight: bold;
-  cursor: move;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.retro-window-title {
-  font-size: 14px;
-}
-
-.retro-window-controls {
-  display: flex;
-}
-
-.retro-btn {
-  background: #c0c0c0;
-  border: 2px outset #ffffff;
-  color: black;
-  width: 24px;
-  height: 24px;
+.player-controls {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-left: 3px;
-  cursor: pointer;
-  font-size: 12px;
+  gap: 5px;
 }
 
-.retro-btn:active {
+#playPauseBtn {
+  background: #c0c0c0;
+  border: 2px outset #ffffff;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#playPauseBtn:active {
   border: 2px inset #ffffff;
 }
 
-.retro-window-body {
-  padding: 10px;
+#volumeControl {
+  width: 80px;
+  cursor: pointer;
+  accent-color: #000080;
+}
+
+.player-status {
+  padding: 5px 10px;
   background-color: #ffffff;
-}
-
-.volume-control {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.volume-control label {
-  margin-right: 5px;
   font-size: 12px;
-}
-
-.volume-control input {
-  width: 100px;
-}
-
-.track-info {
-  font-size: 12px;
-  color: #000080;
-  text-align: center;
 }
 
 /* 移动端适配 */
 @media (max-width: 768px) {
-  .retro-window {
+  .retro-music-player {
     width: 180px;
-    bottom: 10px;
-    right: 10px;
+    font-size: 14px;
   }
 }
