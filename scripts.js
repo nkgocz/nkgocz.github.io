@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
   // 创建音频对象
-  const audio = new Audio('music/background.mp3');
+  const audio = new Audio('Bass Meant Jazz.mp3');
   audio.volume = 0.3; // 初始音量30%
   audio.loop = true;
   
