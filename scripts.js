@@ -7,71 +7,61 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-  // 创建音频对象
-  const bgMusic = new Audio('Bass Meant Jazz.mp3');
+  // 创建音频对象 - 使用MIDI或MP3
+  const bgMusic = new Audio('Bass Meant Jazz.mid');
   
-  // 设置音量30%
-  bgMusic.volume = 0.3;
-  
-  // 设置循环播放
+  // 设置30%音量
+  bgMusic.volume = 0.2;
   bgMusic.loop = true;
   
-  // 尝试自动播放（受浏览器策略限制）
+  // 尝试自动播放（处理浏览器限制）
   const playPromise = bgMusic.play();
   
-  // 处理自动播放被阻止的情况
   if (playPromise !== undefined) {
     playPromise.catch(error => {
-      // 显示播放按钮让用户手动启动
-      showMusicButton();
+      // 显示复古风格播放按钮
+      createRetroMusicControls();
     });
   }
   
-  // 显示音乐控制按钮的函数
-  function showMusicButton() {
-    const musicControl = document.createElement('div');
-    musicControl.id = 'music-control';
-    musicControl.innerHTML = `
-      <button id="play-music">▶ player</button>
-      <span>Volume: <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.3"></span>
+  // 创建复古音乐控制面板
+  function createRetroMusicControls() {
+    const musicPanel = document.createElement('div');
+    musicPanel.id = 'retro-music-panel';
+    musicPanel.innerHTML = `
+      <div class="retro-window">
+        <div class="retro-title-bar">
+          <span>Music control</span>
+          <div class="retro-buttons">
+            <button class="retro-close">×</button>
+          </div>
+        </div>
+        <div class="retro-content">
+          <button id="retro-play-btn">▶ player</button>
+          <div class="retro-volume-control">
+            <span>volume:</span>
+            <input type="range" min="0" max="1" step="0.1" value="0.3" id="retro-volume-slider">
+          </div>
+        </div>
+      </div>
     `;
-    document.body.appendChild(musicControl);
+    document.body.appendChild(musicPanel);
     
-    // 添加按钮事件监听
-    document.getElementById('play-music').addEventListener('click', function() {
+    // 播放按钮事件
+    document.getElementById('retro-play-btn').addEventListener('click', function() {
       bgMusic.play();
-      this.style.display = 'none';
+      this.textContent = "♪ playing...";
+      this.disabled = true;
     });
     
     // 音量控制
-    document.getElementById('volume-control').addEventListener('input', function(e) {
+    document.getElementById('retro-volume-slider').addEventListener('input', function(e) {
       bgMusic.volume = e.target.value;
     });
+    
+    // 关闭按钮
+    document.querySelector('.retro-close').addEventListener('click', function() {
+      musicPanel.style.display = 'none';
+    });
   }
-  
-  // 复古样式
-  const style = document.createElement('style');
-  style.textContent = `
-    #music-control {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: #00FF00;
-      color: black;
-      padding: 5px 10px;
-      font-family: "Comic Sans MS", cursive;
-      border: 2px outset #FFFFFF;
-      z-index: 1000;
-    }
-    #music-control button {
-      background: #C0C0C0;
-      border: 2px outset #FFFFFF;
-      color: black;
-      cursor: pointer;
-    }
-    #music-control input {
-      vertical-align: middle;
-    }
-  `;
-  document.head.appendChild(style);
 });
