@@ -1,170 +1,215 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Noah's Diary - Home</title>
+  <title>Noah's Diary</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <link rel="stylesheet" href="styles.css" type="text/css">
+  <style>
+    /* 基础样式保持原有设计 */
+    body {
+      font-family: "Comic Sans MS", "Times New Roman", cursive, serif;
+      background-color: #f0f0f0;
+      color: #000000;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+    
+    a {
+      color: #0000FF;
+      text-decoration: none;
+    }
+    
+    a:hover {
+      color: #FF0000;
+      text-decoration: underline;
+    }
+    
+    /* CRT效果容器 */
+    .crt-effect {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    /* 扫描线效果 */
+    .crt-effect::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+      );
+      background-size: 100% 2px;
+      pointer-events: none;
+      z-index: 100;
+    }
+    
+    /* RGB色偏效果 */
+    .crt-effect::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(0deg, 
+        rgba(255, 0, 0, 0.06), 
+        rgba(0, 255, 0, 0.02), 
+        rgba(0, 0, 255, 0.06));
+      pointer-events: none;
+      z-index: 100;
+    }
+    
+    /* 暗角效果 */
+    .crt-container {
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      border: 1px solid #CCCCCC;
+      
+      /* 鱼眼变形效果 */
+      transform: perspective(500px) rotateX(2deg);
+      border-radius: 2px;
+      
+      /* 暗角 */
+      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.6);
+      
+      /* 初始状态 */
+      filter: blur(0);
+      transform: perspective(500px) rotateX(2deg) translateY(0);
+    }
+    
+    /* 频闪抖动效果动画 */
+    @keyframes crt-flicker {
+      0% { 
+        opacity: 1;
+        transform: perspective(500px) rotateX(2deg) translateY(0);
+        filter: blur(0) sepia(0);
+      }
+      1% {
+        opacity: 0.95;
+        transform: perspective(500px) rotateX(2deg) translateY(-2px);
+        filter: blur(0.5px) sepia(0.1);
+      }
+      2% {
+        opacity: 0.98;
+        transform: perspective(500px) rotateX(2deg) translateY(1px);
+        filter: blur(0.2px) sepia(0.05);
+      }
+      3% {
+        opacity: 0.99;
+        transform: perspective(500px) rotateX(2deg) translateY(-1px);
+        filter: blur(0.1px) sepia(0.02);
+      }
+      4% {
+        opacity: 1;
+        transform: perspective(500px) rotateX(2deg) translateY(0);
+        filter: blur(0) sepia(0);
+      }
+      50% {
+        opacity: 1;
+        transform: perspective(500px) rotateX(2deg) translateY(0);
+        filter: blur(0) sepia(0);
+      }
+      51% {
+        opacity: 0.92;
+        transform: perspective(500px) rotateX(2deg) translateY(-3px);
+        filter: blur(0.8px) sepia(0.15);
+      }
+      52% {
+        opacity: 0.96;
+        transform: perspective(500px) rotateX(2deg) translateY(2px);
+        filter: blur(0.4px) sepia(0.08);
+      }
+      53% {
+        opacity: 0.98;
+        transform: perspective(500px) rotateX(2deg) translateY(-1px);
+        filter: blur(0.2px) sepia(0.04);
+      }
+      54% {
+        opacity: 1;
+        transform: perspective(500px) rotateX(2deg) translateY(0);
+        filter: blur(0) sepia(0);
+      }
+      100% {
+        opacity: 1;
+        transform: perspective(500px) rotateX(2deg) translateY(0);
+        filter: blur(0) sepia(0);
+      }
+    }
+    
+    /* 轻微RGB文字分割效果 */
+    h1, h2, h3 {
+      text-shadow: 
+        0.5px 0 0 rgba(255, 0, 0, 0.3),
+        -0.5px 0 0 rgba(0, 0, 255, 0.3);
+    }
+    
+    /* 原有布局样式保持不变 */
+    .header {
+      background-color: #000080;
+      color: #FFFFFF;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .nav {
+      background-color: #CCCCCC;
+      padding: 5px;
+      text-align: center;
+    }
+    
+    .content {
+      display: flex;
+      margin-top: 20px;
+    }
+    
+    .sidebar {
+      width: 150px;
+      background-color: #F0F0F0;
+      padding: 10px;
+    }
+    
+    .main {
+      flex: 1;
+      padding: 10px;
+    }
+    
+    .footer {
+      background-color: #000080;
+      color: #FFFFFF;
+      text-align: center;
+      padding: 5px;
+      font-size: 12px;
+    }
+  </style>
 </head>
-<body bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-
- <body>
-  <!-- 添加CRT效果层 -->
-  <div class="crt-effect"></div>
-  
-  <!-- CRT显示器外壳 -->
-  <div class="crt-monitor">
-    <!-- 你原有的网站内容放在这里 -->
-    <table width="100%" border="0" cellspacing="20" cellpadding="0">
-      <!-- 原有内容 -->
-    </table>
-    
-    <!-- 添加显示器控制按钮 -->
-    <div class="monitor-controls">
-      <div class="power-button"></div>
-      <div class="brightness-knob"></div>
-      <div class="contrast-knob"></div>
-    </div>
-  </div>
- </body> 
-
-<!-- 顶部欢迎横幅 -->
-<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000080">
-  <tr>
-    <td>
-      <font face="Arial" size="6" color="#FFFFFF">
-        <marquee behavior="scroll" direction="left">Welcome to Noah's Diary!</marquee>
-      </font>
-    </td>
-  </tr>
-</table>
-
-<!-- 导航菜单 -->
-<table width="100%" border="0" cellspacing="0" cellpadding="5">
-  <tr bgcolor="#CCCCCC">
-    <td width="20%" align="center"><a href="index.html">Home</a></td>
-    <td width="20%" align="center"><a href="about.html">About Me</a></td>
-    <td width="20%" align="center"><a href="diary/">Diary</a></td>
-    <td width="20%" align="center"><a href="guestbook.html">Guestbook</a></td>
-    <td width="20%" align="center"><a href="mailto:noah@example.com">
-      <img src="images/email.gif" width="16" height="11" border="0" alt="Email Me">
-    </a></td>
-  </tr>
-</table>
-
-<!-- 主要内容区 -->
-<table width="100%" border="0" cellspacing="20" cellpadding="0">
-  <tr>
-    <!-- 左侧导航 -->
-    <td width="150" valign="top" bgcolor="#F0F0F0">
-      <font face="Arial" size="2">
-        <b>Diary Entries</b><br>
-        <img src="images/divider.gif" width="100%" height="5"><br>
-        <a href="diary/2023/">2023</a><br>
-        <a href="diary/2024/">2024</a><br>
-        <br>
-        <b>Links</b><br>
-        <img src="images/divider.gif" width="100%" height="5"><br>
-        <a href="http://www.geocities.com/" target="_blank">GeoCities</a><br>
-        <a href="http://www.angelfire.com/" target="_blank">Angelfire</a><br>
-      </font>
-    </td>
-    
-    <div class="retro-music-player">
-  <audio id="bgMusic" loop>
-    <source src="music/Bass Meant Jazz.mid" type="audio/midi">    
-  </audio>
-  <button onclick="playMusic()">▶ PLAY</button>
-  <button onclick="pauseMusic()">❚❚ PAUSE</button>
-  <span>Volume:</span>
-  <input type="range" min="0" max="1" step="0.1" value="0.3" onchange="setVolume(this.value)">
-</div>
-
-<script>
-function playMusic() {
-  var bgMusic = document.getElementById('bgMusic');
-  bgMusic.volume = 0.3; // 默认30%
-  bgMusic.play();
-}
-
-function pauseMusic() {
-  document.getElementById('bgMusic').pause();
-}
-
-function setVolume(vol) {
-  document.getElementById('bgMusic').volume = vol;
-}
-</script>
-
-<style>
-.retro-music-player {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  background: #000080;
-  padding: 5px;
-  border: 2px outset #C0C0C0;
-  font-family: "Arial", sans-serif;
-  font-size: 12px;
-  color: white;
-  z-index: 1001;
-}
-
-.retro-music-player button {
-  background: #C0C0C0;
-  border: 2px outset #FFFFFF;
-  color: black;
-  margin: 0 2px;
-  cursor: pointer;
-}
-</style>
-    
-document.getElementById('bgMusic').volume = 0.3; // 设置为30%音量
-    <!-- 中间内容 -->
-    <td valign="top">
-      <font face="Arial" size="3">
-        <center>
-          <img src="images/underconstruction.gif" alt="Under Construction">
-          <h1>Welcome to My Diary!</h1>
-        </center>
-        
-        <p>Hi there! This is my personal online diary where I share my thoughts, experiences, and daily life.</p>
-        
-        <p>Feel free to browse through my entries and leave a message in my guestbook!</p>
-        
-        <p>This site is best viewed with Netscape Navigator 4.0 or Internet Explorer 5.0 at 800x600 resolution.</p>
-        
-        <center>
-          <img src="images/divider.gif" width="80%" height="5">
-        </center>
-        
-        <h2>Latest Entry</h2>
-        <p><b>June 15, 2024</b></p>
-        <p>Today I went to the mall and bought a new CD. It was the latest Backstreet Boys album. I'm so excited to listen to it!</p>
-        <p><a href="diary/2024/06-june.html">Read more...</a></p>
-      </font>
-    </td>
-    
-    <!-- 右侧装饰 -->
-    <td width="100" valign="top" align="center">
-      <img src="images/animated_construction.gif" width="88" height="31" alt="Under Construction">
-      <br><br>
-      <img src="images/counter.gif" alt="Visitor Counter">
-      <br>
-      <font face="Arial" size="1">Since June 1999</font>
-    </td>
-  </tr>
-</table>
-
-<!-- 页脚 -->
-<table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#000080">
-  <tr>
-    <td align="center">
-      <font face="Arial" size="1" color="#FFFFFF">
-        &copy; 1999-2024 Noah's Diary | Last Updated: June 16, 2024
-      </font>
-    </td>
-  </tr>
-</table>
-
-</body>
-</html>
+<body>
+  <!-- CRT效果外层容器 -->
+  <div class="crt-effect">
+    <!-- 内容容器 -->
+    <div class="crt-container" id="crtScreen">
+      <!-- 原有网站内容 -->
+      <div class="header">
+        <marquee behavior="scroll" direction="left">Welcome to Noah's Diary - CRT Edition!</marquee>
+      </div>
+      
+      <div class="nav">
+        <a href="index.html">Home</a> | 
+        <a href="about.html">About Me</a> | 
+        <a href="diary/">Diary</a> | 
+        <a href="guestbook.html">Guestbook</a>
+      </div>
+      
+      <div class="content">
+        <div class="sidebar">
+          <b>Diary Entries</b
