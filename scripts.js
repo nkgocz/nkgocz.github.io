@@ -1,3 +1,32 @@
+// 确保DOM完全加载后执行
+document.addEventListener('DOMContentLoaded', function() {
+  // 调试：检查播放器元素是否存在
+  const player = document.getElementById('musicPlayer');
+  if (!player) {
+    console.error("错误：未找到 #musicPlayer 元素！");
+    return;
+  }
+
+  // 初始化播放器
+  const audioPlayer = new Audio('music/background.mp3');
+  audioPlayer.volume = 0.3;
+  audioPlayer.loop = true;
+
+  // 播放/暂停功能
+  document.querySelector('.retro-btn').addEventListener('click', function() {
+    if (audioPlayer.paused) {
+      audioPlayer.play();
+      this.textContent = '⏸ Pause';
+    } else {
+      audioPlayer.pause();
+      this.textContent = '▶️ Play';
+    }
+  });
+
+  // 显示播放器（确保CSS已加载）
+  player.style.display = 'block';
+});
+
 // scripts.js
 console.log("JavaScript Loaded!"); // 在浏览器控制台显示消息
 
