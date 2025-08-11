@@ -7,91 +7,69 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
   // 创建音频对象
-  const bgMusic = new Audio('Bass Meant Jazz.mp3');
-  const musicPlayer = document.getElementById('musicPlayer');
-  const musicToggle = document.getElementById('musicToggle');
-  const musicVolume = document.getElementById('musicVolume');
-  const musicClose = document.getElementById('musicClose');
-  const nowPlaying = document.getElementById('nowPlaying');
+  const audio = new Audio('music/background.mp3');
+  audio.volume = 0.3; // 初始音量30%
+  audio.loop = true;
   
-  // 初始设置
-  bgMusic.loop = true;
-  bgMusic.volume = 0.3; // 默认30%音量
+  // 获取DOM元素
+  const player = document.getElementById('retroMusicPlayer');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const volumeControl = document.getElementById('volumeControl');
   
-  // 自动播放（需要用户交互后）
-  let audioEnabled = false;
-  
-  function enableAudio() {
-    if (!audioEnabled) {
-      bgMusic.play().catch(e => console.log("Was stopped:", e));
-      audioEnabled = true;
-    }
-  }
-  
-  // 点击页面任意位置后启用音频
-  document.body.addEventListener('click', enableAudio, { once: true });
-  
-  // 播放/暂停切换
-  musicToggle.addEventListener('click', function() {
-    if (bgMusic.paused) {
-      bgMusic.play();
-      musicToggle.textContent = '❚❚';
+  // 播放/暂停功能
+  playPauseBtn.addEventListener('click', function() {
+    if (audio.paused) {
+      audio.play();
+      playPauseBtn.textContent = '❚❚';
     } else {
-      bgMusic.pause();
-      musicToggle.textContent = '▶';
+      audio.pause();
+      playPauseBtn.textContent = '▶';
     }
   });
   
   // 音量控制
-  musicVolume.addEventListener('input', function() {
-    bgMusic.volume = this.value;
+  volumeControl.addEventListener('input', function() {
+    audio.volume = this.value;
   });
   
-  // 关闭播放器
-  musicClose.addEventListener('click', function() {
-    musicPlayer.style.display = 'none';
-    bgMusic.pause();
-  });
-  
-  // 拖动功能实现
+  // 拖动功能
   let isDragging = false;
   let offsetX, offsetY;
   
-  const header = musicPlayer.querySelector('.retro-window-header');
-  
   // 桌面端拖动
-  header.addEventListener('mousedown', startDrag);
+  player.addEventListener('mousedown', startDrag);
   
-  // 移动端触摸拖动
-  header.addEventListener('touchstart', function(e) {
+  // 移动端拖动
+  player.addEventListener('touchstart', function(e) {
     e.preventDefault();
-    startDrag(e.touches[0]);
+    startDrag({
+      clientX: e.touches[0].clientX,
+      clientY: e.touches[0].clientY
+    });
   });
   
   function startDrag(e) {
     isDragging = true;
-    offsetX = e.clientX - musicPlayer.getBoundingClientRect().left;
-    offsetY = e.clientY - musicPlayer.getBoundingClientRect().top;
+    offsetX = e.clientX - player.getBoundingClientRect().left;
+    offsetY = e.clientY - player.getBoundingClientRect().top;
     
     document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', touchDrag, { passive: false });
+    document.addEventListener('touchmove', touchDrag);
     document.addEventListener('mouseup', stopDrag);
     document.addEventListener('touchend', stopDrag);
   }
   
   function drag(e) {
     if (isDragging) {
-      e.preventDefault();
-      musicPlayer.style.left = (e.clientX - offsetX) + 'px';
-      musicPlayer.style.top = (e.clientY - offsetY) + 'px';
+      player.style.left = (e.clientX - offsetX) + 'px';
+      player.style.top = (e.clientY - offsetY) + 'px';
     }
   }
   
   function touchDrag(e) {
     if (isDragging) {
-      e.preventDefault();
-      musicPlayer.style.left = (e.touches[0].clientX - offsetX) + 'px';
-      musicPlayer.style.top = (e.touches[0].clientY - offsetY) + 'px';
+      player.style.left = (e.touches[0].clientX - offsetX) + 'px';
+      player.style.top = (e.touches[0].clientY - offsetY) + 'px';
     }
   }
   
@@ -103,10 +81,16 @@ document.addEventListener('DOMContentLoaded', function() {
     document.removeEventListener('touchend', stopDrag);
   }
   
-  // 更新当前播放信息
-  function updateTrackInfo() {
-    nowPlaying.textContent = "Noah's Theme";
+  // 点击页面任意位置后开始播放（解决浏览器自动播放限制）
+  function handleFirstInteraction() {
+    audio.play().then(() => {
+      playPauseBtn.textContent = '❚❚';
+    }).catch(e => console.log(e));
+    
+    document.removeEventListener('click', handleFirstInteraction);
+    document.removeEventListener('touchstart', handleFirstInteraction);
   }
   
-  updateTrackInfo();
+  document.addEventListener('click', handleFirstInteraction);
+  document.addEventListener('touchstart', handleFirstInteraction);
 });
