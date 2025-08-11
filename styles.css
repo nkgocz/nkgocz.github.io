@@ -231,79 +231,94 @@ input, textarea, [contenteditable] {
   cursor: url('images/cursors/busy.cur'), wait;
 }
 
-/* 复古音乐播放器窗口 */
-.retro-window {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 250px;
-  background-color: #c0c0c0;
-  border: 3px outset #ffffff;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-  font-family: "Comic Sans MS", cursive;
-  z-index: 1000;
-  display: none; /* 默认隐藏 */
+/* 复古音乐播放器样式 */
+#retro-music-player {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 200px;
+    height: 80px;
+    background-color: #c0c0c0;
+    border: 3px outset #ffffff;
+    font-family: "Comic Sans MS", cursive;
+    z-index: 1000;
+    cursor: default;
+    user-select: none;
 }
 
-.retro-title-bar {
-  padding: 5px;
-  background: linear-gradient(to right, #000080, #1084d0);
-  color: white;
-  font-weight: bold;
-  cursor: move;
-  user-select: none;
-  border-bottom: 2px solid #ffffff;
+#retro-music-player .player-header {
+    background: linear-gradient(to right, #000080, #1084d0);
+    color: white;
+    padding: 3px 5px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: move;
 }
 
-.retro-close-btn {
-  float: right;
-  cursor: pointer;
-  padding: 0 5px;
+#retro-music-player .player-title {
+    margin-right: 20px;
 }
 
-.retro-close-btn:hover {
-  background-color: #ff0000;
+#retro-music-player .player-minimize,
+#retro-music-player .player-close {
+    float: right;
+    margin-left: 5px;
+    cursor: pointer;
 }
 
-.retro-content {
-  padding: 10px;
-  background-color: #ffffff;
+#retro-music-player .player-minimize:hover,
+#retro-music-player .player-close:hover {
+    color: #ffff00;
 }
 
-.retro-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
+#retro-music-player .player-body {
+    padding: 5px;
 }
 
-.retro-btn {
-  background-color: #c0c0c0;
-  border: 2px outset #ffffff;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-family: "Arial", sans-serif;
+#retro-music-player .player-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.retro-btn:hover {
-  background-color: #a0a0a0;
+#retro-music-player button {
+    background-color: #c0c0c0;
+    border: 2px outset #ffffff;
+    color: black;
+    padding: 2px 5px;
+    font-family: "Arial", sans-serif;
+    font-size: 12px;
+    cursor: pointer;
 }
 
-.retro-volume {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+#retro-music-player button:hover {
+    background-color: #a0a0a0;
 }
 
-.retro-slider {
-  width: 100%;
-  accent-color: #000080;
+#retro-music-player .volume-control {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
 }
 
-.retro-track-info {
-  font-size: 12px;
-  color: #000000;
-  background-color: #e0e0e0;
-  padding: 5px;
-  border: 1px inset #c0c0c0;
+#retro-music-player .volume-control span {
+    margin-right: 5px;
+}
+
+#retro-music-player input[type="range"] {
+    width: 100%;
+    accent-color: #000080;
+}
+
+.play-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: yellow;
+    color: black;
+    padding: 5px;
+    font-size: 12px;
+    border: 2px solid black;
+    z-index: 1001;
 }
