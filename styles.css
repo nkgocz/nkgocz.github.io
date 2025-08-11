@@ -213,3 +213,22 @@ a:hover {
     margin-bottom: 5px;
   }
 }
+/* 基础鼠标样式 */
+body {
+  cursor: url('images/cursors/default.cur'), auto;
+}
+
+/* 链接悬停样式 */
+a:hover, button:hover {
+  cursor: url('images/cursors/link.ani'), pointer;
+}
+
+/* 文字选择样式 */
+input, textarea, [contenteditable] {
+  cursor: url('images/cursors/text.cur'), text;
+}
+
+/* 等待状态 */
+.busy, .loading {
+  cursor: url('images/cursors/busy.cur'), wait;
+}
