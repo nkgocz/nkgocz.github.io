@@ -288,28 +288,7 @@
       });
     });
   </script>
-  <!-- 音乐播放器窗口 -->
-<div id="musicPlayer" class="retro-window">
-  <div class="retro-title-bar">
-    <span>Music Player</span>
-    <span class="retro-close-btn" onclick="toggleMusicPlayer()">×</span>
-  </div>
-  <div class="retro-content">
-    <div class="retro-controls">
-      <button onclick="togglePlay()" class="retro-btn">▶️ play</button>
-      <button onclick="stopMusic()" class="retro-btn">⏹ stop</button>
-      <div class="retro-volume">
-        <span>volume</span>
-        <input type="range" min="0" max="1" step="0.1" value="0.3" 
-               oninput="setVolume(this.value)" class="retro-slider">
-      </div>
-    </div>
-    <div class="retro-track-info">
-      Now Playing: <span id="currentTrack">Bass Meant Jazz</span>
-    </div>
-  </div>
-</div>
-  <!-- 放在<body>末尾，</body>标签前 -->
+    
 <script src="scripts.js"></script>
 </body>
 </html>
