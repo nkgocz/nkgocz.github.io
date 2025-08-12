@@ -295,3 +295,98 @@ input, textarea, [contenteditable] {
 .player-status marquee {
     color: #000080;
 }
+/* ==================== */
+/* 移动端响应式样式 */
+/* ==================== */
+
+@media (max-width: 768px) {
+  /* 调整整体布局 */
+  body {
+    background-color: #000;
+    background-image: none;
+    font-size: 16px;
+  }
+  
+  .crt-container {
+    width: 95%;
+    padding: 10px;
+    margin: 10px auto;
+    border: none;
+    box-shadow: none;
+    background-color: #000080;
+  }
+  
+  .crt-screen {
+    padding: 10px;
+    border: 2px inset #6699cc;
+  }
+  
+  /* 调整导航菜单 */
+  .nav-menu ul {
+    flex-direction: column;
+  }
+  
+  .nav-menu li {
+    margin-bottom: 5px;
+  }
+  
+  .nav-menu li a {
+    display: block;
+    padding: 8px;
+  }
+  
+  /* 调整标题 */
+  .header h1 {
+    font-size: 1.8em;
+    padding: 8px;
+  }
+  
+  /* 调整内容区域 */
+  .content {
+    padding: 10px;
+  }
+  
+  /* 调整图片 */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* 调整表格布局 */
+  table {
+    width: 100% !important;
+  }
+  
+  /* 隐藏不必要的装饰元素 */
+  .desktop-only {
+    display: none;
+  }
+  
+  /* 调整音乐播放器 */
+  #retro-music-player {
+    width: 90%;
+    right: 5%;
+    bottom: 10px;
+  }
+  
+  /* 调整字体大小 */
+  .retro-modal-text {
+    font-size: 16px;
+  }
+}
+
+/* 小屏幕额外调整 */
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.5em;
+  }
+  
+  .diary-date {
+    font-size: 1em;
+  }
+  
+  .retro-modal {
+    width: 95%;
+    left: 2.5%;
+  }
+}
