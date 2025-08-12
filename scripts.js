@@ -101,3 +101,52 @@ function makeDraggable(element) {
         document.onmousemove = null;
     }
 }
+// 移动端菜单切换
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  if (menu.style.display === 'block') {
+    menu.style.display = 'none';
+  } else {
+    menu.style.display = 'block';
+  }
+}
+
+// 调整弹窗大小和位置
+function adjustModalForMobile() {
+  if (window.innerWidth <= 768) {
+    const modal = document.getElementById('aboutModal');
+    if (modal) {
+      modal.style.width = '90%';
+      modal.style.left = '5%';
+      modal.style.top = '20px';
+    }
+  }
+}
+
+// 初始化移动端功能
+function initMobileFeatures() {
+  // 隐藏桌面特定元素
+  if (window.innerWidth <= 768) {
+    document.querySelectorAll('.desktop-only').forEach(el => {
+      el.style.display = 'none';
+    });
+  }
+  
+  // 调整音乐播放器
+  const player = document.getElementById('retro-music-player');
+  if (player && window.innerWidth <= 768) {
+    player.style.width = '90%';
+    player.style.right = '5%';
+  }
+  
+  // 监听窗口大小变化
+  window.addEventListener('resize', function() {
+    adjustModalForMobile();
+  });
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+  initMobileFeatures();
+  adjustModalForMobile();
+});
