@@ -295,33 +295,27 @@ input, textarea, [contenteditable] {
 .player-status marquee {
     color: #000080;
 }
-/* ==================== */
-/* 移动端响应式样式 */
-/* ==================== */
+
+
+/* ====================== */
+/* 移动端响应式布局 */
+/* ====================== */
 
 @media (max-width: 768px) {
-  /* 调整整体布局 */
-  body {
-    background-color: #000;
-    background-image: none;
-    font-size: 16px;
-  }
-  
+  /* 调整CRT显示器效果容器 */
   .crt-container {
     width: 95%;
     padding: 10px;
     margin: 10px auto;
-    border: none;
-    box-shadow: none;
-    background-color: #000080;
+    border-width: 5px;
   }
   
+  /* 调整屏幕内边距 */
   .crt-screen {
     padding: 10px;
-    border: 2px inset #6699cc;
   }
   
-  /* 调整导航菜单 */
+  /* 导航菜单改为垂直布局 */
   .nav-menu ul {
     flex-direction: column;
   }
@@ -332,50 +326,64 @@ input, textarea, [contenteditable] {
   
   .nav-menu li a {
     display: block;
-    padding: 8px;
+    padding: 8px 5px;
   }
   
-  /* 调整标题 */
+  /* 调整标题大小 */
   .header h1 {
     font-size: 1.8em;
     padding: 8px;
   }
   
-  /* 调整内容区域 */
+  /* 内容区域调整 */
   .content {
     padding: 10px;
   }
   
-  /* 调整图片 */
+  /* 日记条目调整 */
+  .diary-entry {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+  
+  /* 调整字体大小 */
+  body {
+    font-size: 14px;
+  }
+  
+  /* 调整页脚 */
+  .footer {
+    font-size: 0.7em;
+    padding: 3px;
+  }
+  
+  /* 调整表格布局（如果有） */
+  table {
+    width: 100% !important;
+  }
+  
+  /* 调整图片大小 */
   img {
     max-width: 100%;
     height: auto;
   }
   
-  /* 调整表格布局 */
-  table {
-    width: 100% !important;
+  /* 调整弹窗大小 */
+  .retro-modal {
+    width: 90%;
+    left: 5% !important;
+    top: 20px !important;
   }
   
-  /* 隐藏不必要的装饰元素 */
-  .desktop-only {
-    display: none;
-  }
-  
-  /* 调整音乐播放器 */
+  /* 调整音乐播放器位置 */
   #retro-music-player {
     width: 90%;
     right: 5%;
     bottom: 10px;
   }
-  
-  /* 调整字体大小 */
-  .retro-modal-text {
-    font-size: 16px;
-  }
 }
 
-/* 小屏幕额外调整 */
+/* 超小屏幕适配 */
 @media (max-width: 480px) {
   .header h1 {
     font-size: 1.5em;
@@ -385,71 +393,43 @@ input, textarea, [contenteditable] {
     font-size: 1em;
   }
   
-  .retro-modal {
-    width: 95%;
-    left: 2.5%;
+  .content {
+    padding: 8px;
+  }
+  
+  /* 简化导航菜单 */
+  .nav-menu li a {
+    padding: 5px 3px;
+    font-size: 0.9em;
   }
 }
-/* 移动端特定样式 */
-.mobile-header {
-  display: none;
-  background-color: #000080;
-  color: white;
-  padding: 5px;
-  font-family: "Arial", sans-serif;
-  margin-bottom: 10px;
+/* 确保所有媒体元素响应式 */
+img, embed, iframe, object, video {
+  max-width: 100%;
+  height: auto;
 }
 
-.mobile-menu-button {
-  display: none;
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  z-index: 1001;
+/* 复古图片边框调整 */
+.retro-image {
+  max-width: 100%;
+  border: 2px inset #c0c0c0;
+  margin: 5px 0;
+}
+/* 基础字体大小调整 */
+body {
+  font-size: calc(14px + 0.3vw);
 }
 
-.mobile-menu-button button {
-  background-color: #000080;
-  color: white;
-  border: 2px outset #ffffff;
+h1 {
+  font-size: calc(1.5em + 1vw);
+}
+
+h2 {
+  font-size: calc(1.3em + 0.6vw);
+}
+/* 确保触摸目标足够大 */
+a, button, .clickable {
+  min-height: 44px;
+  min-width: 44px;
   padding: 8px 12px;
-  font-family: "Comic Sans MS", cursive;
-}
-
-.mobile-menu {
-  display: none;
-  position: fixed;
-  bottom: 50px;
-  left: 10px;
-  background-color: #c0c0c0;
-  border: 3px outset #ffffff;
-  z-index: 1001;
-  width: 150px;
-}
-
-.mobile-menu a {
-  display: block;
-  padding: 10px;
-  color: #0000ff;
-  text-decoration: none;
-  border-bottom: 1px solid #ffffff;
-}
-
-.mobile-menu a:hover {
-  background-color: #000080;
-  color: white;
-}
-
-@media (max-width: 768px) {
-  .mobile-header {
-    display: block;
-  }
-  
-  .mobile-menu-button {
-    display: block;
-  }
-  
-  .desktop-nav {
-    display: none;
-  }
 }
