@@ -426,3 +426,71 @@ a, button, .clickable {
   min-width: 44px;
   padding: 8px 12px;
 }
+  
+/* 复古弹窗样式 */
+.popup-window {
+    display: none;
+    position: fixed;
+    width: 80%;
+    max-width: 600px;
+    height: 70vh;
+    background-color: #c0c0c0;
+    border: 3px outset #ffffff;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    font-family: "Comic Sans MS", cursive;
+    overflow: hidden;
+}
+
+.popup-header {
+    background: linear-gradient(to right, #000080, #1084d0);
+    color: white;
+    padding: 5px 10px;
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup-title {
+    font-weight: bold;
+}
+
+.popup-close {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.popup-close:hover {
+    color: #ff0000;
+}
+
+.popup-content {
+    height: calc(100% - 30px);
+    overflow: auto;
+    background-color: #ffffff;
+    padding: 10px;
+    border-top: 2px solid #c0c0c0;
+}
+
+/* 复古滚动条 */
+.popup-content::-webkit-scrollbar {
+    width: 12px;
+}
+
+.popup-content::-webkit-scrollbar-track {
+    background: #000066;
+}
+
+.popup-content::-webkit-scrollbar-thumb {
+    background: #00ffff;
+    border: 2px outset #ccc;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .popup-window {
+        width: 95%;
+        height: 80vh;
+    }
+}
