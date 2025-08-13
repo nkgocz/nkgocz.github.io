@@ -25,17 +25,16 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.body.appendChild(musicPlayer);
     
-    // 创建音频元素
     const audio = new Audio('Bass Meant Jazz.mp3');
     audio.loop = true;
-    audio.volume = 0.3; // 初始音量30%
+    audio.volume = 0.3;
     
-    // 获取控制元素
+    
     const playPauseBtn = document.getElementById('playPauseBtn');
     const volumeSlider = document.getElementById('volumeSlider');
     const volumeDisplay = document.getElementById('volumeDisplay');
     
-    // 播放/暂停功能
+    
     playPauseBtn.addEventListener('click', function() {
         if (audio.paused) {
             audio.play();
@@ -46,18 +45,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // 音量控制
+
     volumeSlider.addEventListener('input', function() {
         audio.volume = volumeSlider.value;
         volumeDisplay.textContent = Math.round(volumeSlider.value * 100) + '%';
     });
     
-    // 需要用户交互后才能播放音乐
+    
     document.body.addEventListener('click', function initAudio() {
-        // 只执行一次
+        
         document.body.removeEventListener('click', initAudio);
         
-        // 尝试播放音乐
+        
         audio.play().then(() => {
             playPauseBtn.textContent = '❚❚';
         }).catch(error => {
@@ -65,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // 使播放器可拖动
+    
     makeDraggable(musicPlayer);
 });
 
@@ -130,13 +129,6 @@ function initMobileFeatures() {
     document.querySelectorAll('.desktop-only').forEach(el => {
       el.style.display = 'none';
     });
-  }
-  
-  // 调整音乐播放器
-  const player = document.getElementById('retro-music-player');
-  if (player && window.innerWidth <= 768) {
-    player.style.width = '90%';
-    player.style.right = '5%';
   }
   
   // 监听窗口大小变化
