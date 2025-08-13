@@ -144,110 +144,141 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-  // 创建弹窗容器
-  const popupContainer = document.createElement('div');
-  popupContainer.className = 'popup-container';
-  popupContainer.innerHTML = `
-    <div class="popup-header">
-      <span class="popup-title">Diary Entries</span>
-      <span class="popup-close">&times;</span>
-    </div>
-    <div class="popup-content"></div>
-  `;
-  document.body.appendChild(popupContainer);
+  // 初始化所有弹窗
+  const modalTriggers = document.querySelectorAll('[data-modal-target]');
   
-  // 获取弹窗元素
-  const popup = document.querySelector('.popup-container');
-  const popupHeader = document.querySelector('.popup-header');
-  const popupContent = document.querySelector('.popup-content');
-  const popupClose = document.querySelector('.popup-close');
-  
-  // 为所有popup-link添加点击事件
-  document.querySelectorAll('.popup-link').forEach(link => {
-    link.addEventListener('click', function(e) {
+  modalTriggers.forEach(trigger => {
+    const modalId = trigger.getAttribute('data-modal-target');
+    const modal = document.getElementById(modalId);
+    const closeBtn = modal.querySelector('.modal-close');
+    
+    // 创建遮罩层
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    document.body.appendChild(overlay);
+    
+    // 显示弹窗
+    trigger.addEventListener('click', function(e) {
       e.preventDefault();
-      const targetId = this.getAttribute('href').substring(1);
-      const targetContent = document.getElementById(targetId);
+      modal.style.display = 'block';
+      overlay.style.display = 'block';
       
-      if (targetContent) {
-        // 设置弹窗内容
-        popupContent.innerHTML = targetContent.innerHTML;
-        // 显示弹窗
-        popup.style.display = 'block';
-        // 设置标题为链接文本
-        document.querySelector('.popup-title').textContent = this.textContent;
+      // 初始居中位置
+      positionModal(modal);
+    });
+    
+    // 关闭弹窗
+    closeBtn.addEventListener('click', function() {
+      modal.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+    
+    // 点击遮罩层关闭
+    overlay.addEventListener('click', function() {
+      modal.style.display = 'none';
+      this.style.display = 'none';
+    });
+    
+    // 使弹窗可拖动
+    makeDraggable(modal.querySelector('.modal-header'), modal);
+  });
+  
+  // 窗口大小改变时重新定位
+  window.addEventListener('resize', function() {
+    document.querySelectorAll('.retro-modal').forEach(modal => {
+      if (modal.style.display === 'block') {
+        positionModal(modal);
       }
     });
   });
-  
-  // 关闭弹窗
-  popupClose.addEventListener('click', function() {
-    popup.style.display = 'none';
-  });
-  
-  // 点击弹窗外部关闭
-  popup.addEventListener('click', function(e) {
-    if (e.target === popup) {
-      popup.style.display = 'none';
-    }
-  });
-  
-  // 拖动功能
-  let isDragging = false;
-  let offsetX, offsetY;
-  
-  popupHeader.addEventListener('mousedown', startDrag);
-  popupHeader.addEventListener('touchstart', startDrag, { passive: false });
-  
-  function startDrag(e) {
-    e.preventDefault();
-    isDragging = true;
-    
-    if (e.type === 'mousedown') {
-      offsetX = e.clientX - popup.getBoundingClientRect().left;
-      offsetY = e.clientY - popup.getBoundingClientRect().top;
-    } else if (e.type === 'touchstart') {
-      offsetX = e.touches[0].clientX - popup.getBoundingClientRect().left;
-      offsetY = e.touches[0].clientY - popup.getBoundingClientRect().top;
-    }
-    
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', drag, { passive: false });
-    document.addEventListener('mouseup', stopDrag);
-    document.addEventListener('touchend', stopDrag);
-  }
-  
-  function drag(e) {
-    if (!isDragging) return;
-    e.preventDefault();
-    
-    let clientX, clientY;
-    
-    if (e.type === 'mousemove') {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    } else if (e.type === 'touchmove') {
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    }
-    
-    const newX = clientX - offsetX;
-    const newY = clientY - offsetY;
-    
-    // 限制弹窗不超出视口
-    const maxX = window.innerWidth - popup.offsetWidth;
-    const maxY = window.innerHeight - popup.offsetHeight;
-    
-    popup.style.left = Math.min(Math.max(0, newX), maxX) + 'px';
-    popup.style.top = Math.min(Math.max(0, newY), maxY) + 'px';
-    popup.style.transform = 'none'; // 移除初始的居中定位
-  }
-  
-  function stopDrag() {
-    isDragging = false;
-    document.removeEventListener('mousemove', drag);
-    document.removeEventListener('touchmove', drag);
-    document.removeEventListener('mouseup', stopDrag);
-    document.removeEventListener('touchend', stopDrag);
-  }
 });
+
+// 弹窗居中函数
+function positionModal(modal) {
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  const modalWidth = modal.offsetWidth;
+  const modalHeight = modal.offsetHeight;
+  
+  modal.style.left = '50%';
+  modal.style.top = '50%';
+  modal.style.transform = 'translate(-50%, -50%)';
+}
+
+// 拖动功能实现（支持触摸设备）
+function makeDraggable(header, modal) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  
+  // 桌面端鼠标事件
+  header.onmousedown = dragMouseDown;
+  
+  // 移动端触摸事件
+  header.addEventListener('touchstart', touchStart, { passive: false });
+  
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+  
+  function touchStart(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    pos3 = touch.clientX;
+    pos4 = touch.clientY;
+    document.ontouchend = closeDragElement;
+    document.ontouchmove = touchMove;
+  }
+  
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    
+    // 使用transform实现无拖影移动
+    const currentTransform = modal.style.transform.match(/translate\(([^)]+)\)/);
+    let tx = 0, ty = 0;
+    
+    if (currentTransform) {
+      const translateValues = currentTransform[1].split(',');
+      tx = parseFloat(translateValues[0]);
+      ty = parseFloat(translateValues[1]);
+    }
+    
+    modal.style.transform = `translate(calc(${tx}px - ${pos1}px), calc(${ty}px - ${pos2}px))`;
+  }
+  
+  function touchMove(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    pos1 = pos3 - touch.clientX;
+    pos2 = pos4 - touch.clientY;
+    pos3 = touch.clientX;
+    pos4 = touch.clientY;
+    
+    const currentTransform = modal.style.transform.match(/translate\(([^)]+)\)/);
+    let tx = 0, ty = 0;
+    
+    if (currentTransform) {
+      const translateValues = currentTransform[1].split(',');
+      tx = parseFloat(translateValues[0]);
+      ty = parseFloat(translateValues[1]);
+    }
+    
+    modal.style.transform = `translate(calc(${tx}px - ${pos1}px), calc(${ty}px - ${pos2}px))`;
+  }
+  
+  function closeDragElement() {
+    // 停止移动
+    document.onmouseup = null;
+    document.onmousemove = null;
+    document.ontouchend = null;
+    document.ontouchmove = null;
+  }
+}
