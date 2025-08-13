@@ -375,13 +375,6 @@ input, textarea, [contenteditable] {
     top: 20px !important;
   }
   
-  /* 调整音乐播放器位置 */
-  #retro-music-player {
-    width: 90%;
-    right: 5%;
-    bottom: 10px;
-  }
-}
 
 /* 超小屏幕适配 */
 @media (max-width: 480px) {
