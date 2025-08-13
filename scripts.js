@@ -142,3 +142,110 @@ document.addEventListener('DOMContentLoaded', function() {
   initMobileFeatures();
   adjustModalForMobile();
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 创建弹窗元素
+    const popup = document.createElement('div');
+    popup.className = 'popup-window';
+    popup.innerHTML = `
+        <div class="popup-header">
+            <span class="popup-title">Noah's Diary - 窗口</span>
+            <span class="popup-close">&times;</span>
+        </div>
+        <div class="popup-content"></div>
+    `;
+    document.body.appendChild(popup);
+    
+    // 获取元素
+    const popupWindow = document.querySelector('.popup-window');
+    const popupContent = document.querySelector('.popup-content');
+    const closeBtn = document.querySelector('.popup-close');
+    const header = document.querySelector('.popup-header');
+    
+    // 设置拖拽功能
+    let isDragging = false;
+    let offsetX, offsetY;
+    
+    // 桌面端拖拽
+    header.addEventListener('mousedown', startDrag);
+    
+    // 移动端拖拽
+    header.addEventListener('touchstart', startDrag, { passive: false });
+    
+    function startDrag(e) {
+        e.preventDefault();
+        isDragging = true;
+        
+        if (e.type === 'mousedown') {
+            offsetX = e.clientX - popupWindow.getBoundingClientRect().left;
+            offsetY = e.clientY - popupWindow.getBoundingClientRect().top;
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+        } else {
+            const touch = e.touches[0];
+            offsetX = touch.clientX - popupWindow.getBoundingClientRect().left;
+            offsetY = touch.clientY - popupWindow.getBoundingClientRect().top;
+            document.addEventListener('touchmove', drag, { passive: false });
+            document.addEventListener('touchend', stopDrag);
+        }
+    }
+    
+    function drag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        
+        let clientX, clientY;
+        
+        if (e.type === 'mousemove') {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        } else {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        }
+        
+        const x = clientX - offsetX;
+        const y = clientY - offsetY;
+        
+        // 限制在视口内
+        const maxX = window.innerWidth - popupWindow.offsetWidth;
+        const maxY = window.innerHeight - popupWindow.offsetHeight;
+        
+        popupWindow.style.left = Math.min(Math.max(0, x), maxX) + 'px';
+        popupWindow.style.top = Math.min(Math.max(0, y), maxY) + 'px';
+    }
+    
+    function stopDrag() {
+        isDragging = false;
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', stopDrag);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('touchend', stopDrag);
+    }
+    
+    // 关闭按钮
+    closeBtn.addEventListener('click', function() {
+        popupWindow.style.display = 'none';
+    });
+    
+    // 点击链接打开弹窗
+    document.querySelectorAll('.popup-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // 复制当前页主要内容到弹窗
+            const mainContent = document.querySelector('body').cloneNode(true);
+            // 移除不需要的元素
+            const elementsToRemove = mainContent.querySelectorAll('script, style, link, .popup-window');
+            elementsToRemove.forEach(el => el.remove());
+            
+            popupContent.innerHTML = '';
+            popupContent.appendChild(mainContent);
+            
+            // 显示弹窗并居中
+            popupWindow.style.display = 'block';
+            popupWindow.style.left = (window.innerWidth - popupWindow.offsetWidth) / 2 + 'px';
+            popupWindow.style.top = (window.innerHeight - popupWindow.offsetHeight) / 2 + 'px';
+        });
+    });
+});
