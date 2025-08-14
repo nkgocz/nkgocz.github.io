@@ -427,7 +427,7 @@ a, button, .clickable {
   padding: 8px 12px;
 }
 
-/* 复古风格弹窗 - 更新版 */
+/* 弹窗基础样式 */
 .retro-popup {
   position: fixed;
   top: 50%;
@@ -443,12 +443,34 @@ a, button, .clickable {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif; /* 与原网站一致 */
+  font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif;
   opacity: 0;
   transition: all 0.3s ease;
   will-change: transform, opacity;
 }
 
+/* CRT特效 - 与原网站一致 */
+.crt-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: 
+    /* 扫描线效果 */
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 2px, 3px 100%;
+  z-index: 1;
+}
+
+/* 弹窗头部 */
 .popup-header {
   background: linear-gradient(to right, #000080, #1084d0);
   color: white;
@@ -459,13 +481,17 @@ a, button, .clickable {
   cursor: move;
   user-select: none;
   font-weight: bold;
-  font-family: "Impact", "Arial Black", sans-serif; /* 与原网站标题一致 */
+  font-family: "Impact", "Arial Black", sans-serif;
+  position: relative;
+  z-index: 2;
 }
 
 .popup-title {
   font-size: 16px;
+  text-shadow: 1px 1px 0 #000;
 }
 
+/* 关闭按钮 */
 .popup-close {
   background: #c0c0c0;
   border: 2px outset #ffffff;
@@ -477,36 +503,38 @@ a, button, .clickable {
   font-size: 18px;
   line-height: 0;
   padding: 0;
-  -webkit-tap-highlight-color: transparent; /* 移除移动端点击高亮 */
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  z-index: 3;
 }
 
 .popup-close:hover {
   background: #a0a0a0;
 }
 
+/* 内容区域 */
 .popup-content {
   flex: 1;
   overflow-y: auto;
   padding: 15px;
   background-color: #ffffff;
-  font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif; /* 与原网站正文一致 */
+  font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif;
+  position: relative;
+  z-index: 2;
 }
 
-/* 背景遮罩 */
+/* 背景遮罩 - 更深色突出弹窗 */
 .popup-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7); /* 更深的遮罩 */
   z-index: 1000;
   opacity: 0;
   transition: opacity 0.3s ease;
-}
-
-.popup-backdrop.active {
-  opacity: 1;
+  backdrop-filter: blur(2px); /* 轻微模糊效果 */
 }
 
 /* 移动端优化 */
@@ -514,22 +542,21 @@ a, button, .clickable {
   .retro-popup {
     width: 95%;
     max-height: 90vh;
+    border-width: 2px;
   }
   
   .popup-close {
-    width: 32px; /* 增大点击区域 */
+    width: 32px;
     height: 32px;
     font-size: 24px;
   }
+  
+  .popup-content {
+    padding: 10px;
+  }
 }
 
-/* 防止内容溢出 */
-.popup-content img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* 链接样式保持与原网站一致 */
+/* 内容样式继承原网站 */
 .popup-content a {
   color: #0000FF;
   text-decoration: underline;
@@ -538,4 +565,19 @@ a, button, .clickable {
 .popup-content a:hover {
   color: #FF0000;
   text-decoration: none;
+}
+
+.popup-content h1, 
+.popup-content h2, 
+.popup-content h3 {
+  font-family: "Impact", "Arial Black", sans-serif;
+  color: #800080;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* 防止内容溢出 */
+.popup-content img {
+  max-width: 100%;
+  height: auto;
+  border: 2px inset #c0c0c0;
 }
