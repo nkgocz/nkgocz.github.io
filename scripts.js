@@ -297,26 +297,26 @@ document.addEventListener('DOMContentLoaded', function() {
       document.removeEventListener('touchend', stopDrag);
       
       element.style.cursor = '';
-      element.style.transition = 'left 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
+      element.style.transition = 'left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)';
       
       // 获取当前位置
       const currentLeft = parseFloat(element.style.left);
       const currentTop = parseFloat(element.style.top);
       
-      // 计算回弹距离（基于速度和方向）
-      const reboundX = velocityX * 20; // 调整这个值可以改变回弹强度
-      const reboundY = velocityY * 20;
+      // 计算回弹距离（基于速度和方向）- 调高系数让回弹更快
+      const reboundX = velocityX * 30; // 从20增加到30
+      const reboundY = velocityY * 30;
       
       // 应用方向感知回弹
       element.style.left = `${currentLeft + reboundX}px`;
       element.style.top = `${currentTop + reboundY}px`;
       
-      // 最终回到拖动后的位置
+      // 最终回到拖动后的位置（更快）
       setTimeout(() => {
-        element.style.transition = 'left 0.4s ease-out, top 0.4s ease-out';
+        element.style.transition = 'left 0.2s ease-out, top 0.2s ease-out';
         element.style.left = `${currentLeft}px`;
         element.style.top = `${currentTop}px`;
-      }, 600);
+      }, 300); // 从600ms减少到300ms
     }
   }
 });
