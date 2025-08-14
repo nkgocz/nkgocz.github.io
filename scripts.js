@@ -144,91 +144,108 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-  // 为特定链接添加点击事件
-  document.querySelectorAll('.retro-modal-link').forEach(link => {
+  // 找到所有特定class的链接
+  const popupLinks = document.querySelectorAll('a.popup-link');
+  
+  popupLinks.forEach(link => {
     link.addEventListener('click', function(e) {
       e.preventDefault();
-      const targetId = this.getAttribute('data-target');
-      const modalContent = document.getElementById(targetId);
-      const overlay = document.querySelector('.retro-modal-overlay');
+      const url = this.getAttribute('href');
       
-      // 显示弹窗和遮罩
-      modalContent.style.display = 'block';
-      overlay.style.display = 'block';
+      // 创建弹窗容器
+      const popup = document.createElement('div');
+      popup.className = 'retro-popup';
+      popup.innerHTML = `
+        <div class="popup-header">
+          <span class="popup-title">${this.textContent}</span>
+          <button class="popup-close">&times;</button>
+        </div>
+        <div class="popup-content"></div>
+      `;
       
-      // 添加关闭按钮
-      const closeBtn = document.createElement('div');
-      closeBtn.className = 'retro-modal-close';
-      closeBtn.innerHTML = '×';
-      closeBtn.addEventListener('click', function() {
-        modalContent.style.display = 'none';
-        overlay.style.display = 'none';
+      document.body.appendChild(popup);
+      
+      // 加载内容
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          // 提取目标HTML的body内容
+          const doc = new DOMParser().parseFromString(html, 'text/html');
+          const content = doc.querySelector('body').innerHTML;
+          popup.querySelector('.popup-content').innerHTML = content;
+        })
+        .catch(err => {
+          popup.querySelector('.popup-content').innerHTML = `
+            <div class="popup-error">
+              Failed to load content: ${err.message}
+            </div>
+          `;
+        });
+      
+      // 关闭按钮功能
+      popup.querySelector('.popup-close').addEventListener('click', () => {
+        popup.remove();
       });
       
-      const inner = modalContent.querySelector('.retro-modal-inner');
-      if (!inner.querySelector('.retro-modal-close')) {
-        inner.prepend(closeBtn);
-      }
-      
-      // 添加拖动功能
-      makeDraggable(modalContent, inner);
+      // 使弹窗可拖动
+      makeDraggable(popup);
     });
   });
   
-  // 拖动功能实现（兼容移动端）
-  function makeDraggable(modal, handle) {
+  // 拖动功能实现
+  function makeDraggable(element) {
+    const header = element.querySelector('.popup-header');
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     
-    handle.onmousedown = dragMouseDown;
-    handle.ontouchstart = dragMouseDown;
+    // 桌面端拖动
+    header.onmousedown = dragMouseDown;
+    
+    // 移动端触摸拖动
+    header.addEventListener('touchstart', touchStart, { passive: false });
     
     function dragMouseDown(e) {
       e = e || window.event;
       e.preventDefault();
-      
-      // 获取初始位置
-      if (e.type === 'touchstart') {
-        pos3 = e.touches[0].clientX;
-        pos4 = e.touches[0].clientY;
-      } else {
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-      }
-      
+      pos3 = e.clientX;
+      pos4 = e.clientY;
       document.onmouseup = closeDragElement;
-      document.ontouchend = closeDragElement;
-      
       document.onmousemove = elementDrag;
-      document.ontouchmove = elementDrag;
+    }
+    
+    function touchStart(e) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      pos3 = touch.clientX;
+      pos4 = touch.clientY;
+      document.ontouchend = closeDragElement;
+      document.ontouchmove = touchMove;
     }
     
     function elementDrag(e) {
       e = e || window.event;
       e.preventDefault();
-      
-      // 计算新位置
-      if (e.type === 'touchmove') {
-        pos1 = pos3 - e.touches[0].clientX;
-        pos2 = pos4 - e.touches[0].clientY;
-        pos3 = e.touches[0].clientX;
-        pos4 = e.touches[0].clientY;
-      } else {
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-      }
-      
-      // 设置新位置
-      modal.style.top = (modal.offsetTop - pos2) + "px";
-      modal.style.left = (modal.offsetLeft - pos1) + "px";
+      pos1 = pos3 - e.clientX;
+      pos2 = pos4 - e.clientY;
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      element.style.top = (element.offsetTop - pos2) + "px";
+      element.style.left = (element.offsetLeft - pos1) + "px";
+    }
+    
+    function touchMove(e) {
+      const touch = e.touches[0];
+      pos1 = pos3 - touch.clientX;
+      pos2 = pos4 - touch.clientY;
+      pos3 = touch.clientX;
+      pos4 = touch.clientY;
+      element.style.top = (element.offsetTop - pos2) + "px";
+      element.style.left = (element.offsetLeft - pos1) + "px";
     }
     
     function closeDragElement() {
-      // 停止移动
       document.onmouseup = null;
-      document.ontouchend = null;
       document.onmousemove = null;
+      document.ontouchend = null;
       document.ontouchmove = null;
     }
   }
