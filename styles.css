@@ -444,8 +444,8 @@ a, button, .clickable {
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease, transform 0.2s ease-out;
-  font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif; /* 与原网站一致 */
+  transition: opacity 0.3s ease;
+  font-family: inherit; /* 继承body字体 */
 }
 
 /* 弹窗头部 */
@@ -457,7 +457,8 @@ a, button, .clickable {
   justify-content: space-between;
   align-items: center;
   cursor: move;
-  font-family: "Impact", "Arial Black", sans-serif; /* 与原网站标题一致 */
+  font-family: inherit; /* 继承body字体 */
+  user-select: none;
 }
 
 .popup-title {
@@ -483,13 +484,13 @@ a, button, .clickable {
   background: #a0a0a0;
 }
 
-/* 内容区域 */
+/* 内容区域 - 完全继承原网站样式 */
 .popup-content {
   flex: 1;
   overflow-y: auto;
   padding: 15px;
   background-color: #ffffff;
-  font-family: inherit; /* 继承弹窗字体 */
+  font-family: inherit; /* 重要：完全继承原网站字体 */
 }
 
 /* 背景遮罩 */
@@ -520,3 +521,5 @@ a, button, .clickable {
     height: 100%;
   }
 }
+  transition: left 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  
