@@ -173,6 +173,14 @@ document.addEventListener('DOMContentLoaded', function() {
           const doc = new DOMParser().parseFromString(html, 'text/html');
           const content = doc.querySelector('body').innerHTML;
           popup.querySelector('.popup-content').innerHTML = content;
+          
+          // 字体延续的小代码
+          const contentElements = popup.querySelectorAll('.popup-content, .popup-content *');
+          contentElements.forEach(el => {
+            el.style.fontFamily = 'inherit';
+            el.style.fontSize = 'inherit';
+            el.style.color = 'inherit';
+          });
         })
         .catch(err => {
           popup.querySelector('.popup-content').innerHTML = `
@@ -182,25 +190,29 @@ document.addEventListener('DOMContentLoaded', function() {
           `;
         });
       
-      // 关闭按钮功能
-      popup.querySelector('.popup-close').addEventListener('click', () => {
-        popup.remove();
+      // 关闭按钮功能(os修复版)
+      const closeBtn = popup.querySelector('.popup-close');
+      closeBtn.addEventListener('click', function() {
+        popup.style.animation = 'fadeOut 0.3s forwards';
+        popup.addEventListener('animationend', () => {
+          popup.remove();
+        }, { once: true });
       });
       
-      // 使弹窗可拖动
+      // 弹窗拖动
       makeDraggable(popup);
     });
   });
   
-  // 拖动功能实现
+  // 拖动功能
   function makeDraggable(element) {
     const header = element.querySelector('.popup-header');
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     
-    // 桌面端拖动
+    // 高贵电脑用户的拖动
     header.onmousedown = dragMouseDown;
     
-    // 移动端触摸拖动
+    // 触摸拖动(os这个再有bug我吃屎)
     header.addEventListener('touchstart', touchStart, { passive: false });
     
     function dragMouseDown(e) {
