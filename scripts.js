@@ -152,9 +152,13 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       const url = this.getAttribute('href');
       
-      // 创建弹窗容器
+      // 创建弹窗容器和背景遮罩
+      const backdrop = document.createElement('div');
+      backdrop.className = 'popup-backdrop';
+      
       const popup = document.createElement('div');
       popup.className = 'retro-popup';
+      popup.style.opacity = '0'; // 初始透明用于淡入
       popup.innerHTML = `
         <div class="popup-header">
           <span class="popup-title">${this.textContent}</span>
@@ -163,24 +167,22 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="popup-content"></div>
       `;
       
+      document.body.appendChild(backdrop);
       document.body.appendChild(popup);
+      
+      // 淡入动画
+      setTimeout(() => {
+        popup.style.opacity = '1';
+        popup.style.transform = 'translate(-50%, -50%) scale(1)';
+      }, 10);
       
       // 加载内容
       fetch(url)
         .then(response => response.text())
         .then(html => {
-          // 提取目标HTML的body内容
           const doc = new DOMParser().parseFromString(html, 'text/html');
           const content = doc.querySelector('body').innerHTML;
           popup.querySelector('.popup-content').innerHTML = content;
-          
-          // 字体延续的小代码
-          const contentElements = popup.querySelectorAll('.popup-content, .popup-content *');
-          contentElements.forEach(el => {
-            el.style.fontFamily = 'inherit';
-            el.style.fontSize = 'inherit';
-            el.style.color = 'inherit';
-          });
         })
         .catch(err => {
           popup.querySelector('.popup-content').innerHTML = `
@@ -190,51 +192,66 @@ document.addEventListener('DOMContentLoaded', function() {
           `;
         });
       
-      // 关闭按钮功能(os修复版)
-      const closeBtn = popup.querySelector('.popup-close');
-      closeBtn.addEventListener('click', function() {
-        popup.style.animation = 'fadeOut 0.3s forwards';
-        popup.addEventListener('animationend', () => {
+      // 关闭功能（修复移动端问题）
+      const closePopup = () => {
+        popup.style.opacity = '0';
+        popup.style.transform = 'translate(-50%, -50%) scale(0.9)';
+        backdrop.style.opacity = '0';
+        
+        setTimeout(() => {
           popup.remove();
-        }, { once: true });
-      });
+          backdrop.remove();
+        }, 300); // 匹配CSS过渡时间
+      };
       
-      // 弹窗拖动
-      makeDraggable(popup);
+      // 关闭按钮（同时适用于移动端和桌面端）
+      popup.querySelector('.popup-close').addEventListener('click', closePopup);
+      backdrop.addEventListener('click', closePopup);
+      
+      // 使弹窗可拖动（更新版）
+      makeDraggable(popup, backdrop);
     });
   });
   
-  // 拖动功能
-  function makeDraggable(element) {
+  // 改进的拖动功能实现
+  function makeDraggable(element, backdrop) {
     const header = element.querySelector('.popup-header');
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    let isDragging = false;
     
-    // 高贵电脑用户的拖动
-    header.onmousedown = dragMouseDown;
+    // 桌面端拖动
+    header.addEventListener('mousedown', dragMouseDown);
     
-    // 触摸拖动(os这个再有bug我吃屎)
+    // 移动端触摸拖动
     header.addEventListener('touchstart', touchStart, { passive: false });
     
     function dragMouseDown(e) {
-      e = e || window.event;
+      if (e.target.classList.contains('popup-close')) return;
+      
       e.preventDefault();
+      isDragging = true;
       pos3 = e.clientX;
       pos4 = e.clientY;
-      document.onmouseup = closeDragElement;
-      document.onmousemove = elementDrag;
+      document.addEventListener('mouseup', closeDragElement);
+      document.addEventListener('mousemove', elementDrag);
+      element.style.cursor = 'grabbing';
     }
     
     function touchStart(e) {
+      if (e.target.classList.contains('popup-close')) return;
+      
       e.preventDefault();
+      isDragging = true;
       const touch = e.touches[0];
       pos3 = touch.clientX;
       pos4 = touch.clientY;
-      document.ontouchend = closeDragElement;
-      document.ontouchmove = touchMove;
+      document.addEventListener('touchend', closeDragElement);
+      document.addEventListener('touchmove', touchMove, { passive: false });
+      element.style.cursor = 'grabbing';
     }
     
     function elementDrag(e) {
-      e = e || window.event;
+      if (!isDragging) return;
       e.preventDefault();
       pos1 = pos3 - e.clientX;
       pos2 = pos4 - e.clientY;
@@ -242,9 +259,12 @@ document.addEventListener('DOMContentLoaded', function() {
       pos4 = e.clientY;
       element.style.top = (element.offsetTop - pos2) + "px";
       element.style.left = (element.offsetLeft - pos1) + "px";
+      element.style.transform = 'none'; // 移除居中定位
     }
     
     function touchMove(e) {
+      if (!isDragging) return;
+      e.preventDefault();
       const touch = e.touches[0];
       pos1 = pos3 - touch.clientX;
       pos2 = pos4 - touch.clientY;
@@ -252,13 +272,16 @@ document.addEventListener('DOMContentLoaded', function() {
       pos4 = touch.clientY;
       element.style.top = (element.offsetTop - pos2) + "px";
       element.style.left = (element.offsetLeft - pos1) + "px";
+      element.style.transform = 'none'; // 移除居中定位
     }
     
     function closeDragElement() {
-      document.onmouseup = null;
-      document.onmousemove = null;
-      document.ontouchend = null;
-      document.ontouchmove = null;
+      isDragging = false;
+      document.removeEventListener('mouseup', closeDragElement);
+      document.removeEventListener('mousemove', elementDrag);
+      document.removeEventListener('touchend', closeDragElement);
+      document.removeEventListener('touchmove', touchMove);
+      element.style.cursor = '';
     }
   }
 });
