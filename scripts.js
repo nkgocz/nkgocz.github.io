@@ -144,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-  // 找到所有特定class的链接
   const popupLinks = document.querySelectorAll('a.popup-link');
   
   popupLinks.forEach(link => {
@@ -152,7 +151,10 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       const url = this.getAttribute('href');
       
-      // 创建弹窗容器
+      // 创建弹窗和遮罩
+      const backdrop = document.createElement('div');
+      backdrop.className = 'popup-backdrop';
+      
       const popup = document.createElement('div');
       popup.className = 'retro-popup';
       popup.innerHTML = `
@@ -163,73 +165,114 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="popup-content"></div>
       `;
       
+      document.body.appendChild(backdrop);
       document.body.appendChild(popup);
+      
+      // 淡入动画
+      setTimeout(() => {
+        backdrop.style.opacity = '1';
+        popup.style.opacity = '1';
+      }, 10);
       
       // 加载内容
       fetch(url)
         .then(response => response.text())
         .then(html => {
-          const doc = new DOMParser().parseFromString(html, 'text/html');
-          const content = doc.querySelector('body').innerHTML;
-          popup.querySelector('.popup-content').innerHTML = content;
+          popup.querySelector('.popup-content').innerHTML = 
+            new DOMParser().parseFromString(html, 'text/html').body.innerHTML;
         });
       
       // 关闭功能
-      popup.querySelector('.popup-close').addEventListener('click', function() {
+      const closePopup = () => {
         popup.style.opacity = '0';
-        setTimeout(() => popup.remove(), 300);
-      });
+        backdrop.style.opacity = '0';
+        setTimeout(() => {
+          popup.remove();
+          backdrop.remove();
+        }, 300);
+      };
       
-      // 简单拖动实现
-      let isDragging = false;
-      let offsetX, offsetY;
+      popup.querySelector('.popup-close').addEventListener('click', closePopup);
+      backdrop.addEventListener('click', closePopup);
       
-      const header = popup.querySelector('.popup-header');
-      header.addEventListener('mousedown', startDrag);
-      header.addEventListener('touchstart', startDrag);
-      
-      function startDrag(e) {
-        if (e.target.classList.contains('popup-close')) return;
-        
-        isDragging = true;
-        const clientX = e.clientX || e.touches[0].clientX;
-        const clientY = e.clientY || e.touches[0].clientY;
-        
-        offsetX = clientX - popup.offsetLeft;
-        offsetY = clientY - popup.offsetTop;
-        
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('touchmove', drag);
-        document.addEventListener('mouseup', stopDrag);
-        document.addEventListener('touchend', stopDrag);
-      }
-      
-      function drag(e) {
-        if (!isDragging) return;
-        
-        const clientX = e.clientX || e.touches[0].clientX;
-        const clientY = e.clientY || e.touches[0].clientY;
-        
-        // 计算新位置（限制在视口内）
-        const maxX = window.innerWidth - popup.offsetWidth;
-        const maxY = window.innerHeight - popup.offsetHeight;
-        
-        let newX = clientX - offsetX;
-        let newY = clientY - offsetY;
-        
-        newX = Math.max(0, Math.min(maxX, newX));
-        newY = Math.max(0, Math.min(maxY, newY));
-        
-        popup.style.left = newX + 'px';
-        popup.style.top = newY + 'px';
-        popup.style.transform = 'none'; // 移除居中变换
-      }
-      
-      function stopDrag() {
-        isDragging = false;
-        document.removeEventListener('mousemove', drag);
-        document.removeEventListener('touchmove', drag);
-      }
+      // 顺滑拖动效果
+      makeDraggable(popup);
     });
   });
+  
+  function makeDraggable(element) {
+    const header = element.querySelector('.popup-header');
+    let posX = 0, posY = 0, startX = 0, startY = 0;
+    let isDragging = false;
+    let animationId;
+    
+    // 桌面端
+    header.addEventListener('mousedown', startDrag);
+    
+    // 移动端
+    header.addEventListener('touchstart', startDrag, { passive: false });
+    
+    function startDrag(e) {
+      if (e.target.classList.contains('popup-close')) return;
+      
+      e.preventDefault();
+      isDragging = true;
+      
+      // 获取初始位置
+      const clientX = e.clientX || e.touches[0].clientX;
+      const clientY = e.clientY || e.touches[0].clientY;
+      
+      startX = clientX;
+      startY = clientY;
+      
+      const rect = element.getBoundingClientRect();
+      posX = rect.left;
+      posY = rect.top;
+      
+      // 添加事件监听
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', stopDrag);
+      document.addEventListener('touchmove', drag, { passive: false });
+      document.addEventListener('touchend', stopDrag);
+      
+      element.style.transition = 'none';
+      element.style.cursor = 'grabbing';
+    }
+    
+    function drag(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+      
+      cancelAnimationFrame(animationId);
+      animationId = requestAnimationFrame(() => {
+        const clientX = e.clientX || e.touches[0].clientX;
+        const clientY = e.clientY || e.touches[0].clientY;
+        
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        
+        element.style.left = `${posX + dx}px`;
+        element.style.top = `${posY + dy}px`;
+      });
+    }
+    
+    function stopDrag() {
+      isDragging = false;
+      cancelAnimationFrame(animationId);
+      
+      // 移除事件监听
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('mouseup', stopDrag);
+      document.removeEventListener('touchmove', drag);
+      document.removeEventListener('touchend', stopDrag);
+      
+      element.style.transition = 'transform 0.2s ease-out';
+      element.style.cursor = '';
+      
+      // 添加弹性效果
+      setTimeout(() => {
+        element.style.transform = 'translate(-50%, -50%)';
+      }, 200);
+    }
+  }
 });
