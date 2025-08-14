@@ -151,6 +151,8 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const popup = document.createElement('div');
       popup.className = 'retro-popup';
+      popup.style.left = '50%';
+      popup.style.top = '50%';
       popup.innerHTML = `
         <div class="popup-header">
           <span class="popup-title">${this.textContent}</span>
@@ -161,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       document.body.appendChild(backdrop);
       document.body.appendChild(popup);
-      document.body.classList.add('popup-open'); // 阻止背景滚动
+      document.body.classList.add('popup-open');
       
       // 淡入动画
       setTimeout(() => {
@@ -198,9 +200,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   function makeDraggable(element) {
     const header = element.querySelector('.popup-header');
-    let startX, startY, initialX, initialY;
+    let startX, startY, initialLeft, initialTop;
     let isDragging = false;
     let animationFrame;
+    
+    // 初始化位置
+    element.style.position = 'fixed';
+    element.style.left = '50%';
+    element.style.top = '50%';
+    element.style.transform = 'translate(-50%, -50%)';
     
     // 桌面端
     header.addEventListener('mousedown', startDrag);
@@ -221,9 +229,9 @@ document.addEventListener('DOMContentLoaded', function() {
       startX = clientX;
       startY = clientY;
       
-      const rect = element.getBoundingClientRect();
-      initialX = rect.left;
-      initialY = rect.top;
+      // 获取当前弹窗位置（转换为像素值）
+      initialLeft = parseFloat(element.style.left);
+      initialTop = parseFloat(element.style.top);
       
       // 添加事件监听
       document.addEventListener('mousemove', drag);
@@ -233,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       element.style.transition = 'none';
       element.style.cursor = 'grabbing';
+      element.style.transform = 'none'; // 移除transform以使用left/top定位
     }
     
     function drag(e) {
@@ -247,10 +256,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const dx = clientX - startX;
         const dy = clientY - startY;
         
+        // 计算新位置
+        const newLeft = initialLeft + dx;
+        const newTop = initialTop + dy;
+        
         // 应用带延迟的移动
-        element.style.left = `${initialX + dx * 0.7}px`;
-        element.style.top = `${initialY + dy * 0.7}px`;
-        element.style.transform = 'none';
+        element.style.left = `${newLeft}px`;
+        element.style.top = `${newTop}px`;
       });
     }
     
@@ -265,16 +277,23 @@ document.addEventListener('DOMContentLoaded', function() {
       document.removeEventListener('touchmove', drag);
       document.removeEventListener('touchend', stopDrag);
       
-      // 弹性回位效果
-      element.style.transition = 'left 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
-      element.style.left = '50%';
-      element.style.top = '50%';
-      element.style.transform = 'translate(-50%, -50%)';
+      // 保持当前位置，不自动回中
+      element.style.transition = 'transform 0.3s ease-out';
+      element.style.cursor = '';
       
-      setTimeout(() => {
-        element.style.cursor = '';
-      }, 400);
+      // 如果需要弹性效果但保持在拖动后的位置，可以添加轻微弹性动画
+      const finalLeft = parseFloat(element.style.left);
+      const finalTop = parseFloat(element.style.top);
+      
+      // 微调位置的小动画（可选）
+      element.animate([
+        { left: `${finalLeft}px`, top: `${finalTop}px` },
+        { left: `${finalLeft + 5}px`, top: `${finalTop + 5}px` },
+        { left: `${finalLeft}px`, top: `${finalTop}px` }
+      ], {
+        duration: 300,
+        easing: 'cubic-bezier(0.18, 0.89, 0.32, 1.28)'
+      });
     }
   }
 });
-document.body.classList.add('popup-open');
