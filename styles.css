@@ -427,35 +427,26 @@ a, button, .clickable {
   padding: 8px 12px;
 }
 
-/* 弹窗修复版 */
+/* 复古风格弹窗 - 更新版 */
 .retro-popup {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.9);
   width: 80%;
   max-width: 800px;
   max-height: 80vh;
   background-color: #c0c0c0;
   border: 3px outset #ffffff;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 1001;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* 继承原网站字体 */
-  font-family: inherit;
-  animation: fadeIn 0.3s forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif; /* 与原网站一致 */
+  opacity: 0;
+  transition: all 0.3s ease;
+  will-change: transform, opacity;
 }
 
 .popup-header {
@@ -468,8 +459,7 @@ a, button, .clickable {
   cursor: move;
   user-select: none;
   font-weight: bold;
-  /* 继承原网站标题字体 */
-  font-family: "Impact", "Arial Black", sans-serif;
+  font-family: "Impact", "Arial Black", sans-serif; /* 与原网站标题一致 */
 }
 
 .popup-title {
@@ -487,9 +477,7 @@ a, button, .clickable {
   font-size: 18px;
   line-height: 0;
   padding: 0;
-  /* 确保按钮可点击 */
-  position: relative;
-  z-index: 1;
+  -webkit-tap-highlight-color: transparent; /* 移除移动端点击高亮 */
 }
 
 .popup-close:hover {
@@ -501,18 +489,10 @@ a, button, .clickable {
   overflow-y: auto;
   padding: 15px;
   background-color: #ffffff;
-  /* 继承原网站正文字体 */
-  font-family: "Comic Sans MS", cursive, sans-serif;
-  font-size: 14px;
-  color: #000000;
+  font-family: "Comic Sans MS", "Trebuchet MS", cursive, sans-serif; /* 与原网站正文一致 */
 }
 
-/* 防止内容溢出 */
-.popup-content img {
-  max-width: 100%;
-  height: auto;
-}
-/* 很屌的背景遮罩 */
+/* 背景遮罩 */
 .popup-backdrop {
   position: fixed;
   top: 0;
@@ -520,13 +500,42 @@ a, button, .clickable {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
+
+.popup-backdrop.active {
+  opacity: 1;
+}
+
 /* 移动端优化 */
 @media (max-width: 768px) {
   .retro-popup {
     width: 95%;
     max-height: 90vh;
   }
+  
+  .popup-close {
+    width: 32px; /* 增大点击区域 */
+    height: 32px;
+    font-size: 24px;
+  }
 }
 
+/* 防止内容溢出 */
+.popup-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 链接样式保持与原网站一致 */
+.popup-content a {
+  color: #0000FF;
+  text-decoration: underline;
+}
+
+.popup-content a:hover {
+  color: #FF0000;
+  text-decoration: none;
+}
