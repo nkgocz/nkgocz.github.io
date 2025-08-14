@@ -203,6 +203,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let startX, startY, initialLeft, initialTop;
     let isDragging = false;
     let animationFrame;
+    let velocityX = 0, velocityY = 0;
+    let lastX, lastY;
+    let timestamp, lastTimestamp;
     
     // 初始化位置
     element.style.position = 'fixed';
@@ -228,8 +231,12 @@ document.addEventListener('DOMContentLoaded', function() {
       
       startX = clientX;
       startY = clientY;
+      lastX = clientX;
+      lastY = clientY;
+      timestamp = Date.now();
+      lastTimestamp = timestamp;
       
-      // 获取当前弹窗位置（转换为像素值）
+      // 获取当前弹窗位置
       initialLeft = parseFloat(element.style.left);
       initialTop = parseFloat(element.style.top);
       
@@ -241,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       element.style.transition = 'none';
       element.style.cursor = 'grabbing';
-      element.style.transform = 'none'; // 移除transform以使用left/top定位
+      element.style.transform = 'none';
     }
     
     function drag(e) {
@@ -252,17 +259,25 @@ document.addEventListener('DOMContentLoaded', function() {
       animationFrame = requestAnimationFrame(() => {
         const clientX = e.clientX || e.touches[0].clientX;
         const clientY = e.clientY || e.touches[0].clientY;
+        const now = Date.now();
+        const deltaTime = now - lastTimestamp;
+        
+        if (deltaTime > 0) {
+          // 计算速度
+          velocityX = (clientX - lastX) / deltaTime * 1000; // 像素/秒
+          velocityY = (clientY - lastY) / deltaTime * 1000;
+          
+          lastX = clientX;
+          lastY = clientY;
+          lastTimestamp = now;
+        }
         
         const dx = clientX - startX;
         const dy = clientY - startY;
         
-        // 计算新位置
-        const newLeft = initialLeft + dx;
-        const newTop = initialTop + dy;
-        
-        // 应用带延迟的移动
-        element.style.left = `${newLeft}px`;
-        element.style.top = `${newTop}px`;
+        // 应用移动
+        element.style.left = `${initialLeft + dx}px`;
+        element.style.top = `${initialTop + dy}px`;
       });
     }
     
@@ -277,23 +292,37 @@ document.addEventListener('DOMContentLoaded', function() {
       document.removeEventListener('touchmove', drag);
       document.removeEventListener('touchend', stopDrag);
       
-      // 保持当前位置，不自动回中
-      element.style.transition = 'transform 0.3s ease-out';
       element.style.cursor = '';
+      element.style.transition = 'transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
       
-      // 如果需要弹性效果但保持在拖动后的位置，可以添加轻微弹性动画
-      const finalLeft = parseFloat(element.style.left);
-      const finalTop = parseFloat(element.style.top);
+      // 获取当前位置
+      const currentLeft = parseFloat(element.style.left);
+      const currentTop = parseFloat(element.style.top);
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
       
-      // 微调位置的小动画（可选）
-      element.animate([
-        { left: `${finalLeft}px`, top: `${finalTop}px` },
-        { left: `${finalLeft + 5}px`, top: `${finalTop + 5}px` },
-        { left: `${finalLeft}px`, top: `${finalTop}px` }
-      ], {
-        duration: 300,
-        easing: 'cubic-bezier(0.18, 0.89, 0.32, 1.28)'
-      });
+      // 计算方向向量
+      const dirX = currentLeft < centerX ? -1 : 1;
+      const dirY = currentTop < centerY ? -1 : 1;
+      
+      // 计算距离中心的距离
+      const distX = Math.abs(currentLeft - centerX);
+      const distY = Math.abs(currentTop - centerY);
+      
+      // 根据速度和方向计算回弹幅度
+      const reboundX = Math.min(distX * 0.7 + Math.abs(velocityX) * 0.05, 150);
+      const reboundY = Math.min(distY * 0.7 + Math.abs(velocityY) * 0.05, 150);
+      
+      // 应用方向感知的回弹
+      element.style.left = `${currentLeft + (reboundX * dirX)}px`;
+      element.style.top = `${currentTop + (reboundY * dirY)}px`;
+      
+      // 最终回到拖动位置
+      setTimeout(() => {
+        element.style.transition = 'left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)';
+        element.style.left = `${currentLeft}px`;
+        element.style.top = `${currentTop}px`;
+      }, 50);
     }
   }
 });
