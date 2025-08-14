@@ -137,12 +137,6 @@ function initMobileFeatures() {
   });
 }
 
-// 页面加载完成后初始化
-document.addEventListener('DOMContentLoaded', function() {
-  initMobileFeatures();
-  adjustModalForMobile();
-});
-
 document.addEventListener('DOMContentLoaded', function() {
   const popupLinks = document.querySelectorAll('a.popup-link');
   
@@ -167,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       document.body.appendChild(backdrop);
       document.body.appendChild(popup);
+      document.body.classList.add('popup-open'); // 阻止背景滚动
       
       // 淡入动画
       setTimeout(() => {
@@ -186,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const closePopup = () => {
         popup.style.opacity = '0';
         backdrop.style.opacity = '0';
+        document.body.classList.remove('popup-open');
         setTimeout(() => {
           popup.remove();
           backdrop.remove();
@@ -195,16 +191,16 @@ document.addEventListener('DOMContentLoaded', function() {
       popup.querySelector('.popup-close').addEventListener('click', closePopup);
       backdrop.addEventListener('click', closePopup);
       
-      // 顺滑拖动效果
+      // 优化的拖动效果
       makeDraggable(popup);
     });
   });
   
   function makeDraggable(element) {
     const header = element.querySelector('.popup-header');
-    let posX = 0, posY = 0, startX = 0, startY = 0;
+    let startX, startY, initialX, initialY;
     let isDragging = false;
-    let animationId;
+    let animationFrame;
     
     // 桌面端
     header.addEventListener('mousedown', startDrag);
@@ -226,8 +222,8 @@ document.addEventListener('DOMContentLoaded', function() {
       startY = clientY;
       
       const rect = element.getBoundingClientRect();
-      posX = rect.left;
-      posY = rect.top;
+      initialX = rect.left;
+      initialY = rect.top;
       
       // 添加事件监听
       document.addEventListener('mousemove', drag);
@@ -243,22 +239,25 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!isDragging) return;
       e.preventDefault();
       
-      cancelAnimationFrame(animationId);
-      animationId = requestAnimationFrame(() => {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(() => {
         const clientX = e.clientX || e.touches[0].clientX;
         const clientY = e.clientY || e.touches[0].clientY;
         
         const dx = clientX - startX;
         const dy = clientY - startY;
         
-        element.style.left = `${posX + dx}px`;
-        element.style.top = `${posY + dy}px`;
+        // 应用带延迟的移动
+        element.style.left = `${initialX + dx * 0.7}px`;
+        element.style.top = `${initialY + dy * 0.7}px`;
+        element.style.transform = 'none';
       });
     }
     
     function stopDrag() {
+      if (!isDragging) return;
       isDragging = false;
-      cancelAnimationFrame(animationId);
+      cancelAnimationFrame(animationFrame);
       
       // 移除事件监听
       document.removeEventListener('mousemove', drag);
@@ -266,13 +265,16 @@ document.addEventListener('DOMContentLoaded', function() {
       document.removeEventListener('touchmove', drag);
       document.removeEventListener('touchend', stopDrag);
       
-      element.style.transition = 'transform 0.2s ease-out';
-      element.style.cursor = '';
+      // 弹性回位效果
+      element.style.transition = 'left 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
+      element.style.left = '50%';
+      element.style.top = '50%';
+      element.style.transform = 'translate(-50%, -50%)';
       
-      // 添加弹性效果
       setTimeout(() => {
-        element.style.transform = 'translate(-50%, -50%)';
-      }, 200);
+        element.style.cursor = '';
+      }, 400);
     }
   }
 });
+document.body.classList.add('popup-open');
