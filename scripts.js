@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+  // 找到所有特定class的链接
   const popupLinks = document.querySelectorAll('a.popup-link');
   
   popupLinks.forEach(link => {
@@ -151,10 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       const url = this.getAttribute('href');
       
-      // 创建弹窗和背景遮罩
-      const backdrop = document.createElement('div');
-      backdrop.className = 'popup-backdrop';
-      
+      // 创建弹窗容器
       const popup = document.createElement('div');
       popup.className = 'retro-popup';
       popup.innerHTML = `
@@ -165,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="popup-content"></div>
       `;
       
-      document.body.appendChild(backdrop);
       document.body.appendChild(popup);
       
       // 加载内容
@@ -173,118 +170,66 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.text())
         .then(html => {
           const doc = new DOMParser().parseFromString(html, 'text/html');
-          popup.querySelector('.popup-content').innerHTML = doc.body.innerHTML;
+          const content = doc.querySelector('body').innerHTML;
+          popup.querySelector('.popup-content').innerHTML = content;
         });
       
       // 关闭功能
-      const closePopup = () => {
+      popup.querySelector('.popup-close').addEventListener('click', function() {
         popup.style.opacity = '0';
-        backdrop.style.opacity = '0';
-        setTimeout(() => {
-          popup.remove();
-          backdrop.remove();
-        }, 300);
-      };
+        setTimeout(() => popup.remove(), 300);
+      });
       
-      popup.querySelector('.popup-close').addEventListener('click', closePopup);
-      backdrop.addEventListener('click', closePopup);
+      // 简单拖动实现
+      let isDragging = false;
+      let offsetX, offsetY;
       
-      // 平滑拖动实现
-      makeDraggable(popup);
+      const header = popup.querySelector('.popup-header');
+      header.addEventListener('mousedown', startDrag);
+      header.addEventListener('touchstart', startDrag);
+      
+      function startDrag(e) {
+        if (e.target.classList.contains('popup-close')) return;
+        
+        isDragging = true;
+        const clientX = e.clientX || e.touches[0].clientX;
+        const clientY = e.clientY || e.touches[0].clientY;
+        
+        offsetX = clientX - popup.offsetLeft;
+        offsetY = clientY - popup.offsetTop;
+        
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+      }
+      
+      function drag(e) {
+        if (!isDragging) return;
+        
+        const clientX = e.clientX || e.touches[0].clientX;
+        const clientY = e.clientY || e.touches[0].clientY;
+        
+        // 计算新位置（限制在视口内）
+        const maxX = window.innerWidth - popup.offsetWidth;
+        const maxY = window.innerHeight - popup.offsetHeight;
+        
+        let newX = clientX - offsetX;
+        let newY = clientY - offsetY;
+        
+        newX = Math.max(0, Math.min(maxX, newX));
+        newY = Math.max(0, Math.min(maxY, newY));
+        
+        popup.style.left = newX + 'px';
+        popup.style.top = newY + 'px';
+        popup.style.transform = 'none'; // 移除居中变换
+      }
+      
+      function stopDrag() {
+        isDragging = false;
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('touchmove', drag);
+      }
     });
   });
-  
-  function makeDraggable(element) {
-    const header = element.querySelector('.popup-header');
-    let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
-    let isDragging = false;
-    let animationId;
-    
-    // 初始居中位置
-    const centerX = window.innerWidth / 2 - element.offsetWidth / 2;
-    const centerY = window.innerHeight / 2 - element.offsetHeight / 2;
-    element.style.left = `${centerX}px`;
-    element.style.top = `${centerY}px`;
-    
-    // 桌面端
-    header.addEventListener('mousedown', startDrag);
-    // 移动端
-    header.addEventListener('touchstart', startDrag, { passive: false });
-    
-    function startDrag(e) {
-      if (e.target.classList.contains('popup-close')) return;
-      
-      e.preventDefault();
-      isDragging = true;
-      
-      // 获取初始位置
-      const clientX = e.clientX || e.touches[0].clientX;
-      const clientY = e.clientY || e.touches[0].clientY;
-      
-      posX = element.offsetLeft;
-      posY = element.offsetTop;
-      mouseX = clientX;
-      mouseY = clientY;
-      
-      // 添加事件监听
-      document.addEventListener('mousemove', drag);
-      document.addEventListener('mouseup', stopDrag);
-      document.addEventListener('touchmove', drag, { passive: false });
-      document.addEventListener('touchend', stopDrag);
-      
-      // 开始平滑动画
-      animateDrag();
-    }
-    
-    function drag(e) {
-      if (!isDragging) return;
-      e.preventDefault();
-      
-      const clientX = e.clientX || e.touches[0].clientX;
-      const clientY = e.clientY || e.touches[0].clientY;
-      
-      // 计算目标位置（带有限制）
-      const targetX = Math.max(0, Math.min(
-        window.innerWidth - element.offsetWidth, 
-        posX + (clientX - mouseX)
-      ));
-      
-      const targetY = Math.max(0, Math.min(
-        window.innerHeight - element.offsetHeight, 
-        posY + (clientY - mouseY)
-      ));
-      
-      // 更新目标位置（动画循环会处理实际移动）
-      posX = targetX;
-      posY = targetY;
-    }
-    
-    function animateDrag() {
-      if (!isDragging) return;
-      
-      // 使用缓动效果实现平滑移动
-      const currentX = parseFloat(element.style.left) || 0;
-      const currentY = parseFloat(element.style.top) || 0;
-      
-      // 计算新位置（带缓动）
-      const newX = currentX + (posX - currentX) * 0.2;
-      const newY = currentY + (posY - currentY) * 0.2;
-      
-      element.style.left = `${newX}px`;
-      element.style.top = `${newY}px`;
-      
-      animationId = requestAnimationFrame(animateDrag);
-    }
-    
-    function stopDrag() {
-      isDragging = false;
-      cancelAnimationFrame(animationId);
-      
-      // 移除事件监听
-      document.removeEventListener('mousemove', drag);
-      document.removeEventListener('mouseup', stopDrag);
-      document.removeEventListener('touchmove', drag);
-      document.removeEventListener('touchend', stopDrag);
-    }
-  }
 });
