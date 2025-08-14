@@ -226,8 +226,28 @@
         <div class="sidebar">
           <b>Diary Entries</b><br>
           <hr>
-          <a href="ice cream guy.html" class="retro-link" data-modal-target="about-modal">ice cream guy</a>
-          <a href="diary/2024/">2024</a><br>
+          <!-- 特定链接（添加特定class） -->
+<a href="ice cream guy.html" class="retro-modal-link" data-target="modal-content-1">ice cream guy</a>
+<a href="#noop" class="retro-modal-link" data-target="modal-content-2">status</a>
+
+<!-- 弹窗内容（隐藏状态） -->
+<div id="modal-content-1" class="retro-modal-content" style="display:none;">
+  <div class="retro-modal-inner">
+    <h3>ice cream guy</h3>
+    <p>这里是弹窗内容1，可以放任何HTML内容...</p>
+  </div>
+</div>
+
+<div id="modal-content-2" class="retro-modal-content" style="display:none;">
+  <div class="retro-modal-inner">
+     <h3>弹窗标题2</h3>
+     <p>这里是弹窗内容2，可以放任何HTML内容...</p>
+   </div>
+ </div>
+
+<!-- 弹窗遮罩层 -->
+ <div class="retro-modal-overlay" style="display:none;"></div>
+          
           <br>
           <b>Links</b><br>
           <hr>
