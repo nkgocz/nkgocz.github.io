@@ -430,9 +430,6 @@ a, button, .clickable {
 /* 弹窗基础样式 */
 .retro-popup {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 80%;
   max-width: 600px;
   max-height: 80vh;
@@ -444,11 +441,10 @@ a, button, .clickable {
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  font-family: inherit; /* 继承body字体 */
+  transition: opacity 0.3s ease, transform 0.3s ease-out;
+  font-family: inherit;
 }
 
-/* 弹窗头部 */
 .popup-header {
   background: linear-gradient(to right, #000080, #1084d0);
   color: white;
@@ -457,7 +453,7 @@ a, button, .clickable {
   justify-content: space-between;
   align-items: center;
   cursor: move;
-  font-family: inherit; /* 继承body字体 */
+  font-family: inherit;
   user-select: none;
 }
 
@@ -466,7 +462,6 @@ a, button, .clickable {
   text-shadow: 1px 1px 0 #000;
 }
 
-/* 关闭按钮 */
 .popup-close {
   background: #c0c0c0;
   border: 2px outset #ffffff;
@@ -484,16 +479,14 @@ a, button, .clickable {
   background: #a0a0a0;
 }
 
-/* 内容区域 - 完全继承原网站样式 */
 .popup-content {
   flex: 1;
   overflow-y: auto;
   padding: 15px;
   background-color: #ffffff;
-  font-family: inherit; /* 重要：完全继承原网站字体 */
+  font-family: inherit;
 }
 
-/* 背景遮罩 */
 .popup-backdrop {
   position: fixed;
   top: 0;
@@ -506,14 +499,12 @@ a, button, .clickable {
   transition: opacity 0.3s ease;
 }
 
-/* 移动端优化 */
 @media (max-width: 768px) {
   .retro-popup {
     width: 90%;
     max-height: 85vh;
   }
   
-  /* 阻止触摸时背景滚动 */
   body.popup-open {
     overflow: hidden;
     position: fixed;
@@ -521,5 +512,3 @@ a, button, .clickable {
     height: 100%;
   }
 }
-  transition: left 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  
