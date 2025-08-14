@@ -144,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-  // 找到所有特定class的链接
   const popupLinks = document.querySelectorAll('a.popup-link');
   
   popupLinks.forEach(link => {
@@ -152,106 +151,80 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       const url = this.getAttribute('href');
       
-      // 创建弹窗容器和背景遮罩
+      // 创建弹窗和背景遮罩
       const backdrop = document.createElement('div');
       backdrop.className = 'popup-backdrop';
       
       const popup = document.createElement('div');
-      popup.className = 'retro-popup crt-effect'; // 添加CRT特效类
-      popup.style.opacity = '0';
+      popup.className = 'retro-popup';
       popup.innerHTML = `
         <div class="popup-header">
           <span class="popup-title">${this.textContent}</span>
           <button class="popup-close">&times;</button>
         </div>
         <div class="popup-content"></div>
-        <div class="crt-overlay"></div> <!-- CRT特效层 -->
       `;
       
       document.body.appendChild(backdrop);
       document.body.appendChild(popup);
-      
-      // 触发重绘
-      void popup.offsetWidth;
-      
-      // 淡入动画
-      setTimeout(() => {
-        backdrop.style.opacity = '1';
-        popup.style.opacity = '1';
-        popup.style.transform = 'translate(-50%, -50%) scale(1)';
-      }, 10);
       
       // 加载内容
       fetch(url)
         .then(response => response.text())
         .then(html => {
           const doc = new DOMParser().parseFromString(html, 'text/html');
-          const content = doc.querySelector('body').innerHTML;
-          popup.querySelector('.popup-content').innerHTML = content;
-        })
-        .catch(err => {
-          popup.querySelector('.popup-content').innerHTML = `
-            <div class="popup-error">
-              Failed to load content: ${err.message}
-            </div>
-          `;
+          popup.querySelector('.popup-content').innerHTML = doc.body.innerHTML;
         });
       
       // 关闭功能
       const closePopup = () => {
         popup.style.opacity = '0';
-        popup.style.transform = 'translate(-50%, -50%) scale(0.9)';
         backdrop.style.opacity = '0';
-        
         setTimeout(() => {
           popup.remove();
           backdrop.remove();
         }, 300);
       };
       
-      // 关闭按钮事件
-      const closeBtn = popup.querySelector('.popup-close');
-      closeBtn.addEventListener('click', closePopup);
+      popup.querySelector('.popup-close').addEventListener('click', closePopup);
       backdrop.addEventListener('click', closePopup);
       
-      // 阻止冒泡，避免点击内容关闭弹窗
-      popup.addEventListener('click', (e) => e.stopPropagation());
-      
-      // 改进的拖动功能
-      makeDraggable(popup, closeBtn);
+      // 平滑拖动实现
+      makeDraggable(popup);
     });
   });
   
-  // 安全拖动实现
-  function makeDraggable(element, excludeElement) {
+  function makeDraggable(element) {
     const header = element.querySelector('.popup-header');
-    let startX, startY, initialX, initialY;
+    let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
     let isDragging = false;
+    let animationId;
+    
+    // 初始居中位置
+    const centerX = window.innerWidth / 2 - element.offsetWidth / 2;
+    const centerY = window.innerHeight / 2 - element.offsetHeight / 2;
+    element.style.left = `${centerX}px`;
+    element.style.top = `${centerY}px`;
     
     // 桌面端
     header.addEventListener('mousedown', startDrag);
-    
     // 移动端
     header.addEventListener('touchstart', startDrag, { passive: false });
     
     function startDrag(e) {
-      // 排除关闭按钮
-      if (e.target === excludeElement || e.target.closest('.popup-close')) return;
+      if (e.target.classList.contains('popup-close')) return;
       
       e.preventDefault();
       isDragging = true;
       
       // 获取初始位置
-      if (e.type === 'mousedown') {
-        startX = e.clientX;
-        startY = e.clientY;
-      } else {
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
-      }
+      const clientX = e.clientX || e.touches[0].clientX;
+      const clientY = e.clientY || e.touches[0].clientY;
       
-      initialX = element.offsetLeft;
-      initialY = element.offsetTop;
+      posX = element.offsetLeft;
+      posY = element.offsetTop;
+      mouseX = clientX;
+      mouseY = clientY;
       
       // 添加事件监听
       document.addEventListener('mousemove', drag);
@@ -259,46 +232,59 @@ document.addEventListener('DOMContentLoaded', function() {
       document.addEventListener('touchmove', drag, { passive: false });
       document.addEventListener('touchend', stopDrag);
       
-      element.style.cursor = 'grabbing';
-      element.style.transition = 'none'; // 拖动时禁用动画
+      // 开始平滑动画
+      animateDrag();
     }
     
     function drag(e) {
       if (!isDragging) return;
       e.preventDefault();
       
-      let currentX, currentY;
-      if (e.type === 'mousemove') {
-        currentX = e.clientX;
-        currentY = e.clientY;
-      } else {
-        currentX = e.touches[0].clientX;
-        currentY = e.touches[0].clientY;
-      }
+      const clientX = e.clientX || e.touches[0].clientX;
+      const clientY = e.clientY || e.touches[0].clientY;
       
-      const dx = currentX - startX;
-      const dy = currentY - startY;
+      // 计算目标位置（带有限制）
+      const targetX = Math.max(0, Math.min(
+        window.innerWidth - element.offsetWidth, 
+        posX + (clientX - mouseX)
+      ));
       
-      // 计算新位置（限制在视口内）
-      const newX = Math.max(0, Math.min(window.innerWidth - element.offsetWidth, initialX + dx));
-      const newY = Math.max(0, Math.min(window.innerHeight - element.offsetHeight, initialY + dy));
+      const targetY = Math.max(0, Math.min(
+        window.innerHeight - element.offsetHeight, 
+        posY + (clientY - mouseY)
+      ));
+      
+      // 更新目标位置（动画循环会处理实际移动）
+      posX = targetX;
+      posY = targetY;
+    }
+    
+    function animateDrag() {
+      if (!isDragging) return;
+      
+      // 使用缓动效果实现平滑移动
+      const currentX = parseFloat(element.style.left) || 0;
+      const currentY = parseFloat(element.style.top) || 0;
+      
+      // 计算新位置（带缓动）
+      const newX = currentX + (posX - currentX) * 0.2;
+      const newY = currentY + (posY - currentY) * 0.2;
       
       element.style.left = `${newX}px`;
       element.style.top = `${newY}px`;
-      element.style.transform = 'none'; // 移除居中变换
+      
+      animationId = requestAnimationFrame(animateDrag);
     }
     
     function stopDrag() {
       isDragging = false;
+      cancelAnimationFrame(animationId);
       
       // 移除事件监听
       document.removeEventListener('mousemove', drag);
       document.removeEventListener('mouseup', stopDrag);
       document.removeEventListener('touchmove', drag);
       document.removeEventListener('touchend', stopDrag);
-      
-      element.style.cursor = '';
-      element.style.transition = 'all 0.3s ease'; // 恢复动画
     }
   }
 });
