@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     link.addEventListener('click', function(e) {
       e.preventDefault();
       const videoUrl = this.getAttribute('href');
-      const videoTitle = this.getAttribute('data-title') || '视频播放';
+      const videoTitle = this.getAttribute('data-title') || 'video display';
       
       // 创建弹窗和遮罩
       const backdrop = document.createElement('div');
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="video-container">
             <video controls class="retro-video">
               <source src="${videoUrl}" type="video/mp4">
-              您的浏览器不支持HTML5视频
+              Your browser does not support HTML5 video
             </video>
           </div>
         </div>
@@ -69,18 +69,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // 拖动功能（与之前相同）
+    
   function makeDraggable(element) {
     const header = element.querySelector('.popup-header');
     let startX, startY, initialLeft, initialTop;
     let isDragging = false;
     let animationFrame;
-    
-    // 初始化位置
-    element.style.position = 'fixed';
-    element.style.left = '50%';
-    element.style.top = '50%';
-    element.style.transform = 'translate(-50%, -50%)';
+    let velocityX = 0, velocityY = 0;
+    let lastX, lastY;
+    let lastTime;
     
     // 桌面端
     header.addEventListener('mousedown', startDrag);
