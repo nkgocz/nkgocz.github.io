@@ -111,6 +111,28 @@ body, html {
   margin-bottom: 20px;
   position: relative;
   z-index: 2;
+  
+.sidebar {
+    width: 200px; /* 从150px增加到200px */
+    padding: 5px 10px; /* 减少上下padding从10px到5px，保持左右padding 10px */
+    margin: 0; /* 确保没有额外外边距 */
+}
+
+.sidebar h4 {
+    margin: 8px 0; /* 减少h4元素的上下边距 */
+}
+
+.sidebar p {
+    margin: 8px 0; /* 减少p元素的上下边距 */
+}
+
+.sidebar hr {
+    margin: 8px 0; /* 减少hr元素的上下边距 */
+}
+
+.sidebar a {
+    display: block; /* 让链接独占一行 */
+    margin: 6px 0; /* 调整链接的上下间距 */
 }
 
 /* 日记条目 */
