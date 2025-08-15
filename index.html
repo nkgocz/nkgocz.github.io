@@ -185,13 +185,35 @@
       margin-top: 20px;
       
     }
-    .sidebar {
-.sidebar {
-      width: 150px;
-      background-color: #F0F0F0;
-      padding: 10px;
-   }
-    
+<style>
+  /* ... (keep all other existing styles) ... */
+  
+  .sidebar {
+    width: 180px; /* Increased from 150px */
+    background-color: #F0F0F0;
+    padding: 5px 10px; /* Reduced vertical padding from 10px */
+    margin: 0; /* Ensure no extra margin */
+  }
+  
+  .sidebar h4 {
+    margin: 8px 0; /* Reduced spacing between entries */
+  }
+  
+  .sidebar p {
+    margin: 8px 0; /* Reduced spacing for paragraph elements */
+  }
+  
+  .sidebar br {
+    display: none; /* Remove <br> spacing */
+  }
+  
+  .sidebar hr {
+    margin: 8px 0; /* Reduced spacing around horizontal rules */
+  }
+  
+  /* ... (keep all other existing styles) ... */
+  
+  }
    .main {
       flex: 1;
       padding: 10px;
