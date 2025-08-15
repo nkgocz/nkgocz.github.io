@@ -184,54 +184,43 @@
       display: flex;
       margin-top: 20px;
     }
-    
-    <style>
-  /* ... 其他原有样式保持不变 ... */
+    .sidebar {
+  width: 150px;
+  background-color: #F0F0F0;
+  padding: 5px; /* 减少内边距 */
+  margin: 0; /* 移除外边距 */
+}
 
-  .sidebar {
-    width: 150px;
-    background-color: #F0F0F0;
-    padding: 5px 10px; /* 减少上下padding */
-    margin-top: 0; /* 移除顶部外边距 */
-  }
+.sidebar p {
+  margin: 5px 0; /* 调整段落上下间距 */
+}
 
-  .sidebar p {
-    margin: 5px 0; /* 减少段落上下边距 */
-    line-height: 1.2; /* 减小行高 */
-  }
+.sidebar hr {
+  margin: 5px 0; /* 调整水平线上下间距 */
+}
 
-  .sidebar hr {
-    margin: 5px 0; /* 减少水平线的上下边距 */
-  }
+.sidebar h4 {
+  margin: 8px 0; /* 调整标题上下间距 */
+}
 
-  .sidebar h4 {
-    margin: 8px 0; /* 调整标题上下边距 */
-    line-height: 1.2; /* 减小行高 */
-  }
+.sidebar br {
+  display: none; /* 移除多余的换行 */
+}
 
-  .sidebar a {
-    display: block; /* 使链接成为块级元素以便更好控制间距 */
-    margin: 5px 0; /* 调整链接上下边距 */
-  }
-
-  .sidebar br {
-    display: none; /* 移除<br>标签的影响 */
-  }
-</style>
     }
     
-    .main {
+   .main {
       flex: 1;
       padding: 10px;
     }
     
-    .footer {
+   .footer {
       background-color: #000080;
       color: #FFFFFF;
       text-align: center;
       padding: 5px;
       font-size: 12px;
-    }
+   }
   </style>
 </head>
 <body>
