@@ -94,15 +94,21 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       isDragging = true;
       
+      // 获取初始位置
       const clientX = e.clientX || e.touches[0].clientX;
       const clientY = e.clientY || e.touches[0].clientY;
       
       startX = clientX;
       startY = clientY;
+      lastX = clientX;
+      lastY = clientY;
+      lastTime = performance.now();
       
+      // 获取当前弹窗位置
       initialLeft = parseFloat(element.style.left);
       initialTop = parseFloat(element.style.top);
       
+      // 添加事件监听
       document.addEventListener('mousemove', drag);
       document.addEventListener('mouseup', stopDrag);
       document.addEventListener('touchmove', drag, { passive: false });
@@ -111,20 +117,38 @@ document.addEventListener('DOMContentLoaded', function() {
       element.style.transition = 'none';
       element.style.cursor = 'grabbing';
       element.style.transform = 'none';
+      
+      // 重置速度
+      velocityX = 0;
+      velocityY = 0;
     }
     
     function drag(e) {
       if (!isDragging) return;
       e.preventDefault();
       
+      const now = performance.now();
+      const deltaTime = now - lastTime;
+      lastTime = now;
+      
+      const clientX = e.clientX || e.touches[0].clientX;
+      const clientY = e.clientY || e.touches[0].clientY;
+      
+      // 计算速度（用于弹性效果）
+      if (deltaTime > 0) {
+        velocityX = (clientX - lastX) / deltaTime;
+        velocityY = (clientY - lastY) / deltaTime;
+      }
+      
+      lastX = clientX;
+      lastY = clientY;
+      
       cancelAnimationFrame(animationFrame);
       animationFrame = requestAnimationFrame(() => {
-        const clientX = e.clientX || e.touches[0].clientX;
-        const clientY = e.clientY || e.touches[0].clientY;
-        
         const dx = clientX - startX;
         const dy = clientY - startY;
         
+        // 应用移动（带轻微延迟效果）
         element.style.left = `${initialLeft + dx * 0.8}px`;
         element.style.top = `${initialTop + dy * 0.8}px`;
       });
@@ -135,22 +159,33 @@ document.addEventListener('DOMContentLoaded', function() {
       isDragging = false;
       cancelAnimationFrame(animationFrame);
       
+      // 移除事件监听
       document.removeEventListener('mousemove', drag);
       document.removeEventListener('mouseup', stopDrag);
       document.removeEventListener('touchmove', drag);
       document.removeEventListener('touchend', stopDrag);
       
       element.style.cursor = '';
-      element.style.transition = 'left 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28), top 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28)';
+      element.style.transition = 'left 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)';
       
+      // 获取当前位置
       const currentLeft = parseFloat(element.style.left);
       const currentTop = parseFloat(element.style.top);
       
+      // 计算回弹距离（基于速度和方向）- 调高系数让回弹更快
+      const reboundX = velocityX * 30; // 从20增加到30
+      const reboundY = velocityY * 30;
+      
+      // 应用方向感知回弹
+      element.style.left = `${currentLeft + reboundX}px`;
+      element.style.top = `${currentTop + reboundY}px`;
+      
+      // 最终回到拖动后的位置（更快）
       setTimeout(() => {
-        element.style.transition = 'left 0.4s ease-out, top 0.4s ease-out';
+        element.style.transition = 'left 0.2s ease-out, top 0.2s ease-out';
         element.style.left = `${currentLeft}px`;
         element.style.top = `${currentTop}px`;
-      }, 600);
+      }, 300); // 从600ms减少到300ms
     }
   }
 });
