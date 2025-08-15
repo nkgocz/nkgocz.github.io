@@ -187,11 +187,23 @@
     }
     
     .sidebar {
-      width: 150px;
-      background-color: #F0F0F0;
-      padding: 10px;
+        width: 150px; /* 保持宽度不变 */
+        background-color: #F0F0F0; /* 保持背景色不变 */
+        padding: 5px 10px; /* 只修改垂直padding为5px (原为10px) */
     }
     
+    .sidebar h4 {
+        margin: 5px 0; /* 减小标题间距 (原可能是默认值或更大) */
+    }
+    
+    .sidebar p {
+        margin: 5px 0; /* 减小段落间距 */
+    }
+    
+    .sidebar hr {
+        margin: 5px 0; /* 减小水平线间距 */
+    }
+        
     .main {
       flex: 1;
       padding: 10px;
