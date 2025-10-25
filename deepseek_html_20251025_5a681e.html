@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamCore Desktop</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- CRT效果容器 -->
+    <div class="crt-container" id="crtScreen">
+        <!-- 浮动动图 -->
+        <div class="floating-gif" id="floatingGif"></div>
+        
+        <!-- 桌面 -->
+        <div class="desktop">
+            <!-- 左侧菜单 -->
+            <div class="sidebar">
+                <div class="desktop-icon" onclick="openWindow('diary-window')">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDQ4IDY0SDY0QzI4LjcgNjQgMCA5Mi43IDAgMTI4djI1NmMwIDM1LjMgMjguNyA2NCA2NCA2NGgzODRjMzUuMyAwIDY0LTI4LjcgNjQtNjRWMTI4YzAtMzUuMy0yOC43LTY0LTY0LTY0ek0xNjAgMzY4SDk2di00MGg2NHY0MHptMC04OEg5NnYtNDBoNjR2NDB6bTAtODhIOTZ2LTQwaDY0djQwem05NiAyMjRoLTY0di00MGg2NHY0MHptMC04OGgtNjR2LTQwaDY0djQwem0wLTg4aC02NHYtNDBoNjR2NDB6bTk2IDIyNGgtNjR2LTQwaDY0djQwem0wLTg4aC02NHYtNDBoNjR2NDB6bTAtODhoLTY0di00MGg2NHY0MHptNjQgMjY0SDY0VjEyOGgzODR2MjU2eiIvPjwvc3ZnPg==" alt="Diary">
+                    <span>DIARY</span>
+                </div>
+                
+                <div class="desktop-icon" onclick="openWindow('gallery-window')">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDY0IDQ0OEg0OEMyMS41IDQ0OCAwIDQyNi41IDAgNDAwVjExMmMwLTI2LjUgMjEuNS00OCA0OC00OGg0MTZjMjYuNSAwIDQ4IDIxLjUgNDggNDh2Mjg4YzAgMjYuNS0yMS41IDQ4LTQ4IDQ4ek0zMzYgMTYwYzAtMjYuNS0yMS41LTQ4LTQ4LTQ4cy00OCAyMS41LTQ4IDQ4czIxLjUgNDggNDggNDhzNDgtMjEuNSA0OC00OHpNMTI4IDM4NGgyNTZWMjU2bC04Ni41LTg2LjVjLTkuNC05LjQtMjQuNi05LjQtMzMuOSAwTDEyOCAyODh2OTZ6Ii8+PC9zdmc+" alt="Gallery">
+                    <span>GALLERY</span>
+                </div>
+                
+                <div class="desktop-icon" onclick="openWindow('music-window')">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDQ4IDczLjF2MTcuOWMtMjguNSAwLTUxLjQgMjIuOS01MS40IDUxLjRzMjIuOSA1MS40IDUxLjQgNTEuNGMxNy44IDAgMzMuOS04LjcgNDMuNi0yMi4xbDM1LjcgNDEuM2MxNi4zLTE4LjQgMjYuMS00Mi4xIDI2LjEtNjguM0M1MTIgMTE5LjcgNDc0LjMgODIgNDQ4IDczLjF6TTE2MCAyNTZjMCA4LjgtNy4yIDE2LTE2IDE2SDgwYy04LjggMC0xNi03LjItMTYtMTZ2LTMyYzAtOC44IDcuMi0xNiAxNi0xNmg2NGM4LjggMCAxNiA3LjIgMTYgMTZ2MzJ6bTEyOC02NGMtOC44IDAtMTYgNy4yLTE2IDE2djEyOGMwIDguOCA3LjIgMTYgMTYgMTZoMzJjOC44IDAgMTYtNy4yIDE2LTE2VjIwOGMwLTguOC03LjItMTYtMTYtMTZoLTMyem0tOTYgMGMtOC44IDAtMTYgNy4yLTE2IDE2djEyOGMwIDguOCA3LjIgMTYgMTYgMTZoMzJjOC44IDAgMTYtNy4yIDE2LTE2VjIwOGMwLTguOC03LjItMTYtMTYtMTZoLTMyem0xOTIgMGMtOC44IDAtMTYgNy4yLTE2IDE2djEyOGMwIDguOCA3LjIgMTYgMTYgMTZoMzJjOC44IDAgMTYtNy4yIDE2LTE2VjIwOGMwLTguOC03LjItMTYtMTYtMTZoLTMyek0xNiA0MTZjMCAyNi41IDIxLjUgNDggNDggNDhoMzg0YzI2LjUgMCA0OC0yMS41IDQ4LTQ4VjE5MkgxNnYyMjZ6Ii8+PC9zdmc+" alt="Music">
+                    <span>MUSIC</span>
+                </div>
+                
+                <div class="desktop-icon" onclick="openWindow('about-window')">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMCA0NDhjLTExMC41IDAtMjAwLTg5LjUtMjAwLTIwMFMxNDUuNSA1NiAyNTYgNTZzMjAwIDg5LjUgMjAwIDIwMC04OS41IDIwMC0yMDAgMjAwem0wLTE0NGMtMTcuNyAwLTMyIDE0LjMtMzIgMzJzMTQuMyAzMiAzMiAzMiAzMi0xNC4zIDMyLTMyLTE0LjMtMzItMzItMzJ6bTI1LjQtMTEwLjRjLS44IDguMi03LjcgMTQuNC0xNS45IDE0LjRoLTE2YzguMiAwIDE1LjEtNi4yIDE1LjktMTQuNGwxMy45LTEzNWMuNy03IDQuMS0xMy4yIDEwLjktMTMuMmgyOS43YzYuOCAwIDExLjcgNi4yIDEwLjkgMTMuMmwtMTMuOSAxMzV6Ii8+PC9zdmc+" alt="About">
+                    <span>ABOUT</span>
+                </div>
+            </div>
+        </div>
+        
+<!-- 任务栏 -->
+<div class="taskbar">
+    <button class="start-button" onclick="toggleStartMenu()">START</button>
+    <div class="taskbar-icons">
+        <!-- 删除了D, G, M按钮 -->
+    </div>
+    <div class="clock" id="clock">
+        <div id="date-display">0000-00-00</div>
+        <div id="time-display">00:00:00</div>
+    </div>
+</div>
+        
+        <!-- 开始菜单 -->
+        <div class="start-menu" id="start-menu">
+            <div class="start-menu-header">DreamCore Desktop</div>
+            <div class="start-menu-items">
+                <div class="start-menu-item" onclick="openWindow('diary-window'); toggleStartMenu()">
+                    <span>📝</span>
+                    <span>Diary</span>
+                </div>
+                <div class="start-menu-item" onclick="openWindow('gallery-window'); toggleStartMenu()">
+                    <span>🖼️</span>
+                    <span>Gallery</span>
+                </div>
+                <div class="start-menu-item" onclick="openWindow('music-window'); toggleStartMenu()">
+                    <span>🎵</span>
+                    <span>Music</span>
+                </div>
+                <div class="start-menu-item" onclick="openWindow('about-window'); toggleStartMenu()">
+                    <span>ℹ️</span>
+                    <span>About</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 窗口 -->
+        <div class="window" id="diary-window" style="top: 100px; left: 150px; width: 500px; height: 400px;">
+            <div class="window-header">
+                <div class="window-title">DreamCore Diary</div>
+                <div class="window-controls">
+                    <div class="window-control" onclick="minimizeWindow('diary-window')">_</div>
+                    <div class="window-control" onclick="closeWindow('diary-window')">X</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="content-box">
+                    <h3>Latest Entry</h3>
+                    <p>Today I wandered through the corridors of my mind...</p>
+                    <p>The walls were shifting, breathing with a life of their own.</p>
+                    <p>Sometimes I wonder if these dreams are memories from another life.</p>
+                </div>
+                <button class="pixel-button">New Entry</button>
+                <button class="pixel-button">View Archive</button>
+            </div>
+        </div>
+        
+        <div class="window" id="gallery-window" style="top: 120px; left: 200px; width: 450px; height: 350px;">
+            <div class="window-header">
+                <div class="window-title">DreamCore Gallery</div>
+                <div class="window-controls">
+                    <div class="window-control" onclick="minimizeWindow('gallery-window')">_</div>
+                    <div class="window-control" onclick="closeWindow('gallery-window')">X</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <p>Collection of dream fragments...</p>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px;">
+                    <div style="background: #a0a0a0; height: 80px; display: flex; align-items: center; justify-content: center;">Image 1</div>
+                    <div style="background: #a0a0a0; height: 80px; display: flex; align-items: center; justify-content: center;">Image 2</div>
+                    <div style="background: #a0a0a0; height: 80px; display: flex; align-items: center; justify-content: center;">Image 3</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="window" id="music-window" style="top: 80px; left: 250px; width: 400px; height: 300px;">
+            <div class="window-header">
+                <div class="window-title">DreamCore Music</div>
+                <div class="window-controls">
+                    <div class="window-control" onclick="minimizeWindow('music-window')">_</div>
+                    <div class="window-control" onclick="closeWindow('music-window')">X</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <p>Ambient dreamscapes...</p>
+                <div style="margin-top: 15px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <span>▶</span>
+                        <span style="margin-left: 10px;">Dream Sequence #1</span>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <span>▶</span>
+                        <span style="margin-left: 10px;">Nostalgia Waves</span>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <span>▶</span>
+                        <span style="margin-left: 10px;">Memory Fragments</span>
+                    </div>
+                </div>
+                <button class="pixel-button" style="margin-top: 15px;">Play All</button>
+            </div>
+        </div>
+        
+        <div class="window" id="about-window" style="top: 150px; left: 300px; width: 350px; height: 250px;">
+            <div class="window-header">
+                <div class="window-title">About DreamCore</div>
+                <div class="window-controls">
+                    <div class="window-control" onclick="minimizeWindow('about-window')">_</div>
+                    <div class="window-control" onclick="closeWindow('about-window')">X</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <p>Welcome to DreamCore Desktop</p>
+                <p>A nostalgic journey through digital dreams...</p>
+                <p>Version: 1.0.3</p>
+                <p>Created with ❤️ for dreamers</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
