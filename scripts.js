@@ -157,35 +157,32 @@ document.addEventListener('DOMContentLoaded', function() {
     updatePosition();
 });
 
-// 滚动提示功能
+// 滚动提示功能 - 从左到右滚动
 document.addEventListener('DOMContentLoaded', function() {
     const scrollNotice = document.getElementById('scrollNotice');
-    let scrollCount = 0;
+    const scrollNoticeText = document.getElementById('scrollNoticeText');
+    const noticeText = 'To prevent server overload on GitHub Pages, please refrain from mass sharing this site';
     
     function showScrollNotice() {
-        if (scrollCount < 3) {
-            scrollNotice.classList.add('show');
-            scrollCount++;
-            
-            setTimeout(() => {
-                scrollNotice.classList.remove('show');
-            }, 6000);
-        }
+        // 重置文本，准备滚动两次
+        scrollNoticeText.textContent = noticeText + '    ----    ' + noticeText;
+        
+        // 显示通知栏
+        scrollNotice.classList.add('show');
+        
+        // 40秒后隐藏（两次滚动完成）
+        setTimeout(() => {
+            scrollNotice.classList.remove('show');
+        }, 40000);
     }
     
-    // 每20秒触发一次，连续显示3次
-    setInterval(() => {
-        scrollCount = 0;
-        showScrollNotice();
-        
-        setTimeout(() => showScrollNotice(), 7000);
-        setTimeout(() => showScrollNotice(), 14000);
-    }, 20000);
-    
-    // 页面加载后立即显示第一次
+    // 页面加载2秒后首次显示
     setTimeout(() => {
         showScrollNotice();
-        setTimeout(() => showScrollNotice(), 7000);
-        setTimeout(() => showScrollNotice(), 14000);
+        
+        // 首次显示后，每60秒（40秒滚动 + 20秒等待）循环一次
+        setInterval(() => {
+            showScrollNotice();
+        }, 60000);
     }, 2000);
 });
