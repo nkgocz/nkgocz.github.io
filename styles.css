@@ -451,5 +451,5 @@ body {
 
 .scroll-notice.show .scroll-notice-text {
     /* 文字滚动10秒完成 */
-    animation: scrollText 10s linear;
+    animation: scrollText 15s linear;
 }
