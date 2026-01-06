@@ -418,7 +418,7 @@ body {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
 }
 
-/* 渐显渐隐动画 */
+/* 渐显渐隐动画 - 改为20秒 */
 @keyframes fadeInOut {
     0% {
         opacity: 0;
@@ -434,7 +434,7 @@ body {
     }
 }
 
-/* 文字滚动动画 */
+/* 文字滚动动画 - 改为10秒 */
 @keyframes scrollText {
     0% {
         transform: translateX(-100%);
@@ -445,9 +445,11 @@ body {
 }
 
 .scroll-notice.show {
+    /* 整体显示20秒后消失 */
     animation: fadeInOut 20s ease-in-out;
 }
 
 .scroll-notice.show .scroll-notice-text {
-    animation: scrollText 15s linear;
+    /* 文字滚动10秒完成 */
+    animation: scrollText 10s linear;
 }
