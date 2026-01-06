@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 showScrollNotice();
             }, 40000);
-        }, 15000);
+        }, 20000);
     }
     
     // 页面加载2秒后开始第一次滚动
