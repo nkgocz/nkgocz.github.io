@@ -2,13 +2,13 @@
 function updateClock() {
     const now = new Date();
     const year = now.getFullYear();
-    const month = now.getMonth() + 1;
+    const month = now.toLocaleDateString('en-US', { month: 'short' });
     const day = now.getDate();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
     
-    const dateString = `${year}年 ${month}月${day}日`;
+    const dateString = `${month} ${day}, ${year}`;
     const timeString = `${hours}:${minutes}:${seconds}`;
     
     document.getElementById('clock').innerHTML = `${dateString}<br>${timeString}`;
