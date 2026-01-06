@@ -449,5 +449,5 @@ body {
 }
 
 .scroll-notice.show .scroll-notice-text {
-    animation: scrollText 10s linear;
+    animation: scrollText 20s linear;
 }
