@@ -395,7 +395,7 @@ body {
 }
 
 .scroll-notice.show {
-    animation: fadeInOut 25s ease-in-out;
+    animation: fadeInOut 20s ease-in-out;
 }
 
 .scroll-notice.show .scroll-notice-text {
