@@ -394,14 +394,28 @@ body {
     animation: scrollLeft 20s linear;
 }
 
-/* 从左到右滚动动画 */
-@keyframes scrollLeft {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-100%);
-    }
+/* 滚动提示 */
+.scroll-notice {
+    position: fixed;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    pointer-events: none;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.scroll-notice-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: white;
+    white-space: nowrap;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 /* 渐显渐隐动画 */
@@ -420,6 +434,20 @@ body {
     }
 }
 
+/* 文字滚动动画 */
+@keyframes scrollText {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100vw);
+    }
+}
+
 .scroll-notice.show {
-    animation: fadeInOut 40s ease-in-out;
+    animation: fadeInOut 10s ease-in-out;
+}
+
+.scroll-notice.show .scroll-notice-text {
+    animation: scrollText 10s linear;
 }
