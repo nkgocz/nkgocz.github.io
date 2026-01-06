@@ -65,8 +65,8 @@ body {
 /* 漂浮动图 */
 .floating-gif {
     position: absolute;
-    width: 80px;
-    height: 80px;
+    width: 200px;
+    height: 200px;
     z-index: 5;
     pointer-events: none;
     will-change: transform, left, top;
