@@ -157,32 +157,26 @@ document.addEventListener('DOMContentLoaded', function() {
     updatePosition();
 });
 
-// 滚动提示功能 - 从左到右滚动
+// 滚动提示功能
 document.addEventListener('DOMContentLoaded', function() {
     const scrollNotice = document.getElementById('scrollNotice');
-    const scrollNoticeText = document.getElementById('scrollNoticeText');
-    const noticeText = 'To prevent server overload on GitHub Pages, please refrain from mass sharing this site';
     
     function showScrollNotice() {
-        // 重置文本，准备滚动两次
-        scrollNoticeText.textContent = noticeText + '    ----    ' + noticeText;
-        
-        // 显示通知栏
         scrollNotice.classList.add('show');
         
-        // 40秒后隐藏（两次滚动完成）
+        // 10秒后移除动画类
         setTimeout(() => {
             scrollNotice.classList.remove('show');
-        }, 40000);
+            
+            // 滚动完成后等待20秒再次触发
+            setTimeout(() => {
+                showScrollNotice();
+            }, 20000);
+        }, 10000);
     }
     
-    // 页面加载2秒后首次显示
+    // 页面加载2秒后开始第一次滚动
     setTimeout(() => {
         showScrollNotice();
-        
-        // 首次显示后，每60秒（40秒滚动 + 20秒等待）循环一次
-        setInterval(() => {
-            showScrollNotice();
-        }, 60000);
     }, 2000);
 });
