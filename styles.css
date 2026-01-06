@@ -367,26 +367,59 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
-/* 滚动动画 */
-@keyframes scrollNotice {
+/* 滚动提示 */
+.scroll-notice {
+    position: fixed;
+    top: 20px;
+    left: 0;
+    right: 0;
+    background: rgba(30, 90, 180, 0.75);
+    color: white;
+    padding: 12px 0;
+    border-top: 2px solid rgba(135, 206, 235, 0.8);
+    border-bottom: 2px solid rgba(135, 206, 235, 0.8);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    line-height: 1.6;
+    z-index: 2000;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.scroll-notice-text {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scrollLeft 20s linear;
+}
+
+/* 从左到右滚动动画 */
+@keyframes scrollLeft {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* 渐显渐隐动画 */
+@keyframes fadeInOut {
     0% {
         opacity: 0;
-        transform: translateX(-50%) translateY(-20px);
     }
-    10% {
+    5% {
         opacity: 1;
-        transform: translateX(-50%) translateY(0);
     }
-    90% {
+    95% {
         opacity: 1;
-        transform: translateX(-50%) translateY(0);
     }
     100% {
         opacity: 0;
-        transform: translateX(-50%) translateY(-20px);
     }
 }
 
 .scroll-notice.show {
-    animation: scrollNotice 6s ease-in-out;
+    animation: fadeInOut 40s ease-in-out;
 }
