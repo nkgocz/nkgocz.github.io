@@ -156,3 +156,36 @@ document.addEventListener('DOMContentLoaded', function() {
     
     updatePosition();
 });
+
+// 滚动提示功能
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollNotice = document.getElementById('scrollNotice');
+    let scrollCount = 0;
+    
+    function showScrollNotice() {
+        if (scrollCount < 3) {
+            scrollNotice.classList.add('show');
+            scrollCount++;
+            
+            setTimeout(() => {
+                scrollNotice.classList.remove('show');
+            }, 6000);
+        }
+    }
+    
+    // 每20秒触发一次，连续显示3次
+    setInterval(() => {
+        scrollCount = 0;
+        showScrollNotice();
+        
+        setTimeout(() => showScrollNotice(), 7000);
+        setTimeout(() => showScrollNotice(), 14000);
+    }, 20000);
+    
+    // 页面加载后立即显示第一次
+    setTimeout(() => {
+        showScrollNotice();
+        setTimeout(() => showScrollNotice(), 7000);
+        setTimeout(() => showScrollNotice(), 14000);
+    }, 2000);
+});
