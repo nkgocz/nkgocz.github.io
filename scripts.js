@@ -164,15 +164,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function showScrollNotice() {
         scrollNotice.classList.add('show');
         
-        // 20秒后移除动画类（整体提示消失时间）
+        // 10秒后移除动画类
         setTimeout(() => {
             scrollNotice.classList.remove('show');
             
             // 滚动完成后等待20秒再次触发
             setTimeout(() => {
                 showScrollNotice();
-            }, 20000);
-        }, 20000); // 改为20000毫秒（20秒）
+            }, 60000);
+        }, 25000);
     }
     
     // 页面加载2秒后开始第一次滚动
