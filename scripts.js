@@ -171,8 +171,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // 滚动完成后等待100秒再次触发
             setTimeout(() => {
                 showScrollNotice();
-            }, 100000);
-        }, 50000);
+            }, 90000);
+        }, 100000);
     }
     
     // 页面加载2秒后开始第一次滚动
