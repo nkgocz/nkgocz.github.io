@@ -168,11 +168,11 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             scrollNotice.classList.remove('show');
             
-            // 滚动完成后等待20秒再次触发
+            // 滚动完成后等待25秒再次触发
             setTimeout(() => {
                 showScrollNotice();
-            }, 20000);
-        }, 10000);
+            }, 40000);
+        }, 25000);
     }
     
     // 页面加载2秒后开始第一次滚动
