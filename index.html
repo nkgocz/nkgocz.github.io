@@ -7,38 +7,38 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- CRT效果容器 -->
+    <!-- 效果容器 -->
     <div class="crt-container" id="crtScreen">
 
-<!-- 滚动提示 -->
+<!-- 滚动提示的代码 -->
 <div class="scroll-notice" id="scrollNotice">
     <div class="scroll-notice-text">
         To prevent server overload on GitHub Pages, please refrain from mass sharing this site
     </div>
 </div>
         
-        <!-- 漂浮动图 -->
+        <!-- 动图 -->
         <img src="images/cmzqq.gif" alt="Floating GIF" class="floating-gif" id="floatingGif">
         
-        <!-- 桌面 -->
+        <!-- 桌面上的图标 -->
         <div class="desktop">
-            <!-- 左侧选项栏 -->
+            <!-- 主要内容 -->
             <div class="sidebar">
                 <div class="desktop-icon" onclick="openWindow('diary-window')">
                     <img src="images/diary.gif" alt="Diary">
                     <span>DIARY</span>
                 </div>
-                
+                  <!--画廊-->
                 <div class="desktop-icon" onclick="openWindow('gallery-window')">
                     <img src="images/gallery.gif" alt="Gallery">
                     <span>GALLERY</span>
                 </div>
-                
+                <!--我不会做音乐所以可能会改-->
                 <div class="desktop-icon" onclick="openWindow('music-window')">
                     <img src="images/music.gif" alt="Music">
                     <span>MUSIC</span>
                 </div>
-                
+                <!--关于我或者背景故事的-->
                 <div class="desktop-icon" onclick="openWindow('about-window')">
                     <img src="images/about.gif" alt="About">
                     <span>ABOUT</span>
@@ -46,7 +46,7 @@
             </div>
         </div>
         
-        <!-- 任务栏 -->
+        <!-- 下面的任务栏 -->
         <div class="taskbar">
             <button class="start-button" onclick="toggleStartMenu()">START</button>
             <div class="clock" id="clock">Loading...</div>
@@ -162,7 +162,8 @@
             </div>
         </div>
     </div>
-
+<!--连js文件-->
     <script src="scripts.js"></script>
 </body>
 </html>
+<!--真几把不想敲这个扫码的石山代码-->
