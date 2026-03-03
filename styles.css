@@ -1,7 +1,7 @@
-/* 导入像素字体 */
+/* 像素字体 */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* 基础样式 */
+/* 样式 */
 * {
     margin: 0;
     padding: 0;
@@ -20,7 +20,7 @@ body {
     background-attachment: fixed;
 }
 
-/* CRT效果容器 */
+/* 效果容器 */
 .crt-container {
     position: relative;
     width: 100%;
@@ -62,7 +62,7 @@ body {
     z-index: 100;
 }
 
-/* 漂浮动图 */
+/* 动图 */
 .floating-gif {
     position: absolute;
     width: 200px;
@@ -81,7 +81,7 @@ body {
     z-index: 10;
 }
 
-/* 左侧选项栏 */
+/* 左侧栏 */
 .sidebar {
     width: 140px;
     height: calc(100vh - 80px);
