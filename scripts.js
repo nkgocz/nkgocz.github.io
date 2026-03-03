@@ -1,4 +1,4 @@
-// 时钟功能 - 格式: YYYY年 M月D日 HH:MM:SS
+//时钟功能（os我不知道这个是不是随地区标准时间变化的哈哈，，）
 function updateClock() {
     const now = new Date();
     const year = now.getFullYear();
@@ -45,7 +45,7 @@ function toggleStartMenu() {
     }
 }
 
-// 拖动窗口
+// 拖动窗口功能（但是这个功能仅限电脑端我也不知道咋修算了懒得修）
 function makeDraggable(el) {
     const header = el.querySelector('.window-header');
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -78,7 +78,7 @@ function makeDraggable(el) {
     }
 }
 
-// CRT效果
+// 特效效果
 document.addEventListener('DOMContentLoaded', function() {
     const crtScreen = document.getElementById('crtScreen');
     
@@ -96,12 +96,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 300);
 });
 
-// 点击桌面关闭开始菜单
+// 点击桌面关闭开始菜单（所以我写那个x退出的功能有啥用是不是脑残）
 document.querySelector('.desktop').addEventListener('click', function() {
     document.getElementById('start-menu').style.display = 'none';
 });
 
-// 漂浮动图物理效果
+// 动图物理效果（这个好他妈难我咋他妈写出来的）
 document.addEventListener('DOMContentLoaded', function() {
     const floatingGif = document.getElementById('floatingGif');
     let posX = Math.random() * (window.innerWidth - 100);
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxX = window.innerWidth - 80;
         const maxY = window.innerHeight - 80;
         
-        // 边界检测和反弹
+        // 边界检测和反弹（这个也贼他妈难）
         if (posX <= 0) {
             posX = 0;
             speedX = Math.abs(speedX) + (Math.random() - 0.5);
@@ -180,3 +180,5 @@ document.addEventListener('DOMContentLoaded', function() {
         showScrollNotice();
     }, 2000);
 });
+
+// 代码死了我不想敲了虽然是抄的作业但还是好累哈哈哈
